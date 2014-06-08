@@ -10,7 +10,13 @@ ON_OPENSHIFT = False
 if 'OPENSHIFT_REPO_DIR' in os.environ:
     ON_OPENSHIFT = True
     dbpath=os.environ['OPENSHIFT_DATA_DIR']
-    DEBUG = bool(os.environ.get('DEBUG', False))    
+    DEBUG = bool(os.environ.get('DEBUG', False))
+
+    DB_USER = os.environ['OPENSHIFT_DB_USERNAME']
+    DB_PASSWD = os.environ['OPENSHIFT_DB_PASSWORD']
+    DB_HOST = os.environ['OPENSHIFT_DB_HOST']
+    DB_PORT = os.environ['OPENSHIFT_DB_POST']
+
     if DEBUG:
         print("WARNING: The DEBUG environment is set to True.")
 else:
@@ -18,18 +24,6 @@ else:
     dbpath=PROJECT_DIR
     DEBUG = True
 
-if os.environ.has_key('OPENSHIFT_APP_NAME'):
-    DB_NAME = os.environ['OPENSHIFT_APP_NAME']
-if os.environ.has_key('OPENSHIFT_DB_USERNAME'):
-    DB_USER = os.environ['OPENSHIFT_DB_USERNAME']
-if os.environ.has_key('OPENSHIFT_DB_PASSWORD'):
-    DB_PASSWD = os.environ['OPENSHIFT_DB_PASSWORD']
-if os.environ.has_key('OPENSHIFT_DB_HOST'):
-    DB_HOST = os.environ['OPENSHIFT_DB_HOST']
-if os.environ.has_key('OPENSHIFT_DB_PORT'):
-    DB_PORT = os.environ['OPENSHIFT_DB_PORT']
-
-TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['*']
 ADMINS = (
     ('John Mitchell', 'jmitchel@redhat.com') 
