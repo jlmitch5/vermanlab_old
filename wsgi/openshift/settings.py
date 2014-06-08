@@ -1,37 +1,72 @@
 # -*- coding: utf-8 -*-
 # Django settings for openshift project.
 import imp, os
+
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+ON_OPENSHIFT = False
 # a setting to determine whether we are running on OpenShift
 #if ON_OPENSHIFT:
 if 'OPENSHIFT_REPO_DIR' in os.environ:
+    ON_OPENSHIFT = True
     dbpath=os.environ['OPENSHIFT_DATA_DIR']
     DEBUG = bool(os.environ.get('DEBUG', False))    
     if DEBUG:
         print("WARNING: The DEBUG environment is set to True.")
 else:
+    ON_OPENSHIFT = False
     dbpath=PROJECT_DIR
     DEBUG = True
+
+if os.environ.has_key('OPENSHIFT_APP_NAME'):
+    DB_NAME = os.environ['OPENSHIFT_APP_NAME']
+if os.environ.has_key('OPENSHIFT_DB_USERNAME'):
+    DB_USER = os.environ['OPENSHIFT_DB_USERNAME']
+if os.environ.has_key('OPENSHIFT_DB_PASSWORD'):
+    DB_PASSWD = os.environ['OPENSHIFT_DB_PASSWORD']
+if os.environ.has_key('OPENSHIFT_DB_HOST'):
+    DB_HOST = os.environ['OPENSHIFT_DB_HOST']
+if os.environ.has_key('OPENSHIFT_DB_PORT'):
+    DB_PORT = os.environ['OPENSHIFT_DB_PORT']
+
 TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['*']
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('John Mitchell', 'jmitchel@redhat.com') 
 )
 MANAGERS = ADMINS
 
 
-# os.environ['OPENSHIFT_MYSQL_DB_*'] variables can be used with databases created
-# with rhc cartridge add (see /README in this git repo)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(dbpath, 'sqlite3.db'),  # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+
+if ON_OPENSHIFT:
+    # os.environ['OPENSHIFT_DB_*'] variables can be used with databases created
+    # with rhc app cartridge add (see /README in this git repo)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': DB_NAME,               # Or path to database file if using sqlite3.
+            'USER': DB_USER,               # Not used with sqlite3.
+            'PASSWORD': DB_PASSWD,         # Not used with sqlite3.
+            'HOST': DB_HOST,               # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': DB_PORT,               # Set to empty string for default. Not used with sqlite3.
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': os.path.join(PROJECT_DIR, 'sqlite3.db'),  # Or path to database file if using sqlite3.
+            'USER': '',                      # Not used with sqlite3.
+            'PASSWORD': '',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        }
+    }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -40,7 +75,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/New_York'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
