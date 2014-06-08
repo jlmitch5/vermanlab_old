@@ -12,10 +12,10 @@ if 'OPENSHIFT_REPO_DIR' in os.environ:
     dbpath=os.environ['OPENSHIFT_DATA_DIR']
     DEBUG = bool(os.environ.get('DEBUG', False))
 
-    DB_USER = os.environ['OPENSHIFT_DB_USERNAME']
-    DB_PASSWD = os.environ['OPENSHIFT_DB_PASSWORD']
-    DB_HOST = os.environ['OPENSHIFT_DB_HOST']
-    DB_PORT = os.environ['OPENSHIFT_DB_POST']
+    DB_USER = os.environ['OPENSHIFT_MYSQL_DB_USERNAME']
+    DB_PASSWD = os.environ['OPENSHIFT_MYSQL_DB_PASSWORD']
+    DB_HOST = os.environ['OPENSHIFT_MYSQL_DB_HOST']
+    DB_PORT = os.environ['OPENSHIFT_MYSQL_DB_PORT']
 
     if DEBUG:
         print("WARNING: The DEBUG environment is set to True.")
