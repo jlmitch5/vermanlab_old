@@ -12,7 +12,7 @@ if 'OPENSHIFT_REPO_DIR' in os.environ:
     dbpath=os.environ['OPENSHIFT_DATA_DIR']
     DEBUG = bool(os.environ.get('DEBUG', False))
 
-    DB_NAME = os.environ['OPENSHIFT_MYSQL_DB_NAME']
+    DB_NAME = os.environ['OPENSHIFT_MYSQL_DB_USERNAME']
     DB_USER = os.environ['OPENSHIFT_MYSQL_DB_USERNAME']
     DB_PASSWD = os.environ['OPENSHIFT_MYSQL_DB_PASSWORD']
     DB_HOST = os.environ['OPENSHIFT_MYSQL_DB_HOST']
