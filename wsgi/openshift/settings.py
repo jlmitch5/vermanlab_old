@@ -176,6 +176,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'polls',
     'upload_kernel',
+    'add_kernel_version_drivers',
 )
 
 # A sample logging configuration. The only tangible logging
