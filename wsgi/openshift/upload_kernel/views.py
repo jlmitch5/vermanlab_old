@@ -13,6 +13,8 @@ def list(request):
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
             newdoc = Document(docfile = request.FILES['docfile'])
+            
+            # this is where the file is uploaded to the folder
             newdoc.save()
 
             # Redirect to the document list after POST
