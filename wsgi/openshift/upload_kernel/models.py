@@ -3,4 +3,4 @@
 from django.db import models
 
 class Document(models.Model):
-    docfile = models.FileField(upload_to='to_be_added')
+    docfile = models.FileField(upload_to='') #default location to upload: to_be_added
