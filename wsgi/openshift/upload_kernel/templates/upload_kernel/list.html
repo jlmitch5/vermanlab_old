@@ -10,39 +10,41 @@
 			Welcome to the VML upload portal!
 		</h3>
 		<p>
-			Start by downloading the script to analyze your machinesinstalled kernels (and their modules/drivers)
-		</p>
-		<br />
-		{{ if document.docfile.name == "./vmlModInfoTreeCreation.sh": }}
-			<li>
-				<a href="{{ document.docfile.url }}">VML MOD INFO TREE CREATION</a>
-			</li>
-		<br />
-		<br />
-
-		<!-- List of uploaded documents -->
+			Start by downloading the
 		{% if documents %}
-			<ul>
 			{% for document in documents %}
-				<li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
-			{% endfor %}
-			</ul>
-		{% else %}
-			<p>No documents.</p>
-		{% endif %}
+				{% if document.docfile.name == "to_be_added/vmlModInfoTreeCreation.sh" %}
+		<a href="{{ document.docfile.url }}">VML MOD INFO TREE CREATION SCRIPT</a> to analyze your machine's installed kernels (and their modules/drivers)</p>
+		<br />
+		<br />
 
 		<!-- Upload form. Note enctype attribute! -->
-		<form action="{% url "list" %}" method="post" enctype="multipart/form-data">
-			{% csrf_token %}
-			<p>{{ form.non_field_errors }}</p>
-			<p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-			<p>
-				{{ form.docfile.errors }}
-				{{ form.docfile }}
-			</p>
-			<p><input type="submit" value="Upload" /></p>
-		</form>
+                <form action="{% url "list" %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <p>{{ form.non_field_errors }}</p>
+                        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+                        <p>
+                                {{ form.docfile.errors }}
+                                {{ form.docfile }}
+                        </p>
+                        <p><input type="submit" value="Upload" /></p>
+                </form>
+		<br />
+		<br />
 
+
+		<p> The following machines have added their kernels to VML: </p>	
+				{% else %}
+		</ul>
+		<!-- List of uploaded documents -->
+		<ul>
+			<li><a href="{{ document.docfile.url }}">{% for piece in document.pretty_name %}{{ piece }}{% endfor %}
+			</a></li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+		{% else %}
+			<p>None, you're the first!</p>
+		{% endif %}
 	</body>
-
 </html> 
