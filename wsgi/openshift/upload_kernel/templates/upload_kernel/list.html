@@ -6,6 +6,20 @@
 	</head>
 
 	<body>
+		<h3>
+			Welcome to the VML upload portal!
+		</h3>
+		<p>
+			Start by downloading the script to analyze your machinesinstalled kernels (and their modules/drivers)
+		</p>
+		<br />
+		{{ if document.docfile.name == "./vmlModInfoTreeCreation.sh": }}
+			<li>
+				<a href="{{ document.docfile.url }}">VML MOD INFO TREE CREATION</a>
+			</li>
+		<br />
+		<br />
+
 		<!-- List of uploaded documents -->
 		{% if documents %}
 			<ul>
