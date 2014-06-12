@@ -9,42 +9,48 @@
 		<h3>
 			Welcome to the VML upload portal!
 		</h3>
-		<p>
-			Start by downloading the
-		{% if documents %}
-			{% for document in documents %}
-				{% if document.docfile.name == "to_be_added/vmlModInfoTreeCreation.sh" %}
-		<a href="{{ document.docfile.url }}">VML MOD INFO TREE CREATION SCRIPT</a> to analyze your machine's installed kernels (and their modules/drivers)</p>
+		{% if shell_scripts %}
+			{% for shell_script in shell_scripts %}
+				{% if shell_script.docfile.name == "scripts/vmlModInfoTreeCreation.sh" %}
+		<p>Start by downloading the<a href="{{ shell_script.docfile.url }}">VML MOD INFO TREE CREATION SCRIPT</a> to analyze your machine's installed kernels (and their modules/drivers)</p>
+				{% else %}
+		<p>ERROR! The VML MOD INFO TREE CREATION SCRIPT CANNOT BE FOUND</p>
+				{% endif %}
+			{% endfor %}
+		{% enif %}
 		<br />
 		<br />
 
 		<!-- Upload form. Note enctype attribute! -->
-                <form action="{% url "list" %}" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <p>{{ form.non_field_errors }}</p>
-                        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-                        <p>
-                                {{ form.docfile.errors }}
-                                {{ form.docfile }}
-                        </p>
-                        <p><input type="submit" value="Upload" /></p>
-                </form>
+        <form action="{% url "list" %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>{{ form.non_field_errors }}</p>
+                <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+                <p>
+                        {{ form.docfile.errors }}
+                        {{ form.docfile }}
+                </p>
+                <p><input type="submit" value="Upload" /></p>
+        </form>
 		<br />
 		<br />
 
 
 		<p> The following machines have added their kernels to VML: </p>	
-				{% else %}
-		</ul>
-		<!-- List of uploaded documents -->
 		<ul>
-			<li><a href="{{ document.docfile.url }}">{% for piece in document.pretty_name %}{{ piece }}{% endfor %}
-			</a></li>
-				{% endif %}
+		{% if kernel_tarballs %}
+			{% for kernel_tarball in kernel_tarballs %}
+			<li>
+				<a href="{{ kernel_tarball.docfile.url }}">
+				{% for pretty_name in kernel_tarball.pretty_name %}
+					{{ pretty_name }}
+				{% endfor %}
+				</a>
+			</li>
 			{% endfor %}
 		</ul>
 		{% else %}
-			<p>None, you're the first!</p>
+			<p>No tarballs uploaded, you're the first!</p>
 		{% endif %}
 	</body>
 </html> 
