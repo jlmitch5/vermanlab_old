@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from upload_kernel.models import Kernel_Tarball
 from upload_kernel.models import Shell_Script
 from upload_kernel.forms import KernelTarballForm
+import os, gzip, settings, pdb
 
 def list(request):
 
@@ -18,12 +19,14 @@ def list(request):
     if request.method == 'POST':
         form = KernelTarballForm(request.POST, request.FILES)
         if form.is_valid():
-            new_kernel_tarball = Kernel_Tarball(docfile = request.FILES['docfile'])
-
+            new_kernel_tarball = Kernel_Tarball(docfile = request.FILES['docfile'], decompressed_folder = request.FILES['docfile'])
             # TODO: Fix don't add a duplicate file
             # if not Kernel_Tarball.objects.filter(name=new_kernel_tarball.name):
             #     new_kernel_tarball.save()
             new_kernel_tarball.save()
+            
+            #unzip the file
+            unzip_file(new_kernel_tarball)
 
             # Redirect to the document list after POST
             return HttpResponseRedirect(reverse('upload_kernel.views.list'))
@@ -36,3 +39,8 @@ def list(request):
         {'shell_scripts': shell_scripts, 'kernel_tarballs': kernel_tarballs, 'form': form},
         context_instance=RequestContext(request)
     )
+
+def unzip_file(kernel_object):
+    file_path = os.path.join(settings.MEDIA_ROOT, kernel_object.decompressed_folder.name)
+    print "%s" % file_path
+    os.system('tar xf ' + file_path)

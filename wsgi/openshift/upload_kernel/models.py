@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 class Kernel_Tarball(models.Model):
     docfile = models.FileField(upload_to='to_be_added')
-
+    decompressed_folder = models.FileField(upload_to='added')
     def pretty_name(self):
 	no_path_name = self.docfile.name.split('/')[-1]
 	return no_path_name[:-7]
