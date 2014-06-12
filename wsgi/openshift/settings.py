@@ -26,17 +26,16 @@ else:
     DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
 ADMINS = (
     ('John Mitchell', 'jmitchel@redhat.com') 
 )
+
 MANAGERS = ADMINS
 
-
-
-
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
+TEMPLATE_DEBUG = DEBUG
 
 if ON_OPENSHIFT:
     # os.environ['OPENSHIFT_DB_*'] variables can be used with databases created
@@ -92,6 +91,7 @@ if ON_OPENSHIFT:
     MEDIA_ROOT = os.path.join(os.environ.get('OPENSHIFT_DATA_DIR'), 'to_be_added')
 else:
     MEDIA_ROOT = os.path.join(PROJECT_DIR, '..', 'static/media') 
+
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
@@ -172,13 +172,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'polls',
     'upload_kernel',
-    'add_kernel_version_drivers',
+    'schema_kernel',
 )
 
 # A sample logging configuration. The only tangible logging
