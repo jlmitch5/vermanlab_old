@@ -10,7 +10,7 @@ class Kernel_Tarball(models.Model):
 	no_path_name = self.docfile.name.split('/')[-1]
 	return no_path_name[:-7]
 
-class Shell_Scripts(models.Model):
+class Shell_Script(models.Model):
     docfile = models.FileField(upload_to='scripts')
 
     def pretty_name(self):

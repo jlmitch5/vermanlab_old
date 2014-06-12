@@ -12,7 +12,7 @@ def list(request):
 
     # Load documents for the list page
     kernel_tarballs = Kernel_Tarball.objects.all()
-    shell_scripts = Sell_Scripts.objects.all()
+    shell_scripts = Shell_Script.objects.all()
 
     # Handle file upload
     if request.method == 'POST':
