@@ -17,7 +17,7 @@
 		<p>ERROR! The VML MOD INFO TREE CREATION SCRIPT CANNOT BE FOUND</p>
 				{% endif %}
 			{% endfor %}
-		{% enif %}
+		{% endif %}
 		<br />
 		<br />
 
@@ -42,9 +42,7 @@
 			{% for kernel_tarball in kernel_tarballs %}
 			<li>
 				<a href="{{ kernel_tarball.docfile.url }}">
-				{% for pretty_name in kernel_tarball.pretty_name %}
-					{{ pretty_name }}
-				{% endfor %}
+				{{ kernel_tarball.pretty_name }}
 				</a>
 			</li>
 			{% endfor %}

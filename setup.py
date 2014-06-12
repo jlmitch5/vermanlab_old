@@ -9,5 +9,8 @@ setup(
     author='John Mitchell',
     author_email='jmitchel@example.com',
     url='http://www.python.org/sigs/distutils-sig/',
-    install_requires=['Django>=1.6,<1.7'],
+    install_requires=[
+	'Django>=1.6,<1.7',
+	'Celery>=3.1,<3.2'
+    ]
 )
