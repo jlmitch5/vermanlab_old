@@ -41,6 +41,9 @@ def list(request):
     )
 
 def unzip_file(kernel_object):
+    added_folder_path = os.path.join(settings.MEDIA_ROOT, 'added/')
     file_path = os.path.join(settings.MEDIA_ROOT, kernel_object.decompressed_folder.name)
     print "%s" % file_path
-    os.system('tar xf ' + file_path)
+    # TODO: on OSX, this was adding to the code base dir, not the static dir: (SEE ISSUE 5)
+    os.system('tar xvf ' + file_path + ' -C ' + added_folder_path)
+    os.system('rm -f ' + file_path)
