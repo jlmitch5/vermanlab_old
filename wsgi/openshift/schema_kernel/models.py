@@ -47,6 +47,6 @@ class PCIAliases(models.Model):
 
     # returns the alias for the device
     def __unicode__(self):
-        return self.module+": "+self.vendor+":"+self.device+":"+self.subvendor+":"+self.subdevice
+        return self.module.name+": "+self.vendor+":"+self.device+":"+self.subvendor+":"+self.subdevice
 
 # TODO: Add a model that relates Module, Kernel and Alias for capability tagging

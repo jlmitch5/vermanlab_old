@@ -76,12 +76,11 @@ def unzip_file(kernel_object):
             alias_path = module_path + '/aliases'
 
             #TODO: GET VERSION_NAME NULL ONES TO WORK
-            versioin_name = 'NULL';
+            version_name = 'NULL';
             try:
                 version_name = subprocess.check_output(['cat', '%s' % (version_path)])
-            except:
-                continue
-
+            except subprocess.CalledProcessError:
+                pass
             srcversion_name = subprocess.check_output(['cat', '%s' % (srcversion_path)])
 
             #UPLOAD TO PCIMODULE DB
@@ -98,11 +97,27 @@ def unzip_file(kernel_object):
                 device = 'null'
                 subvendor = 'null'
                 subdevice = 'null'
-                try:
+            try:
+		if alias_component[0]:
                     vendor = alias_component[0]
+            except:
+                pass
+            try:
+                if alias_component[1]:
                     device = alias_component[1]
+            except:
+                pass
+            try:
+                if alias_component[2]:
                     subvendor = alias_component[2]
+            except:
+                pass
+            try:
+                if alias_component[3]:
                     subdevice = alias_component[3]
-                except:
-                    continue
-#                print 'vendor: ' + vendor + '\ndevice: ' + device + '\nsubvendor: ' + subvendor + '\nsubdevice: ' + subdevice + '\n'
+            except:
+                pass
+
+            print m.id
+            a, created_a = PCIAliases.objects.get_or_create(module_id=m.id, vendor=vendor, device=device, subvendor=subvendor, subdevice=device)
+            a.save
