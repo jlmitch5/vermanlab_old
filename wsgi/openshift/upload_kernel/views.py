@@ -77,7 +77,7 @@ def unzip_file(kernel_object):
 
             #TODO: GET VERSION_NAME NULL ONES TO WORK
             version_name = 'NULL'
-            srversion_name = 'NULL'
+            srcversion_name = 'NULL'
             try:
                 version_name = subprocess.check_output(['cat', '%s' % (version_path)])
             except subprocess.CalledProcessError:
