@@ -133,14 +133,23 @@ for filename in /lib/modules/*; do
 				# aliases input (pull aliases from moved_raw_modinfo_file)
 				if [[ $(awk '/alias:/' $moved_raw_modinfo_file | awk '{print $2}' ) == pci:* ]]
 				then
-					# cut off all extraneous values
-					awk '/alias:/' "$moved_raw_modinfo_file" | awk \
-					'{print $2}' | awk -F : '{print $2}' | awk -F "bc" \
-					'{print $1}' | sed 's/\*//' | sed 's/0000//' | sed 's/sd/:/' | \
-					sed 's/\*//' | sed 's/sv/:/' | sed 's/\*//' | sed 's/0000//' | \
-					sed 's/d/:/' | sed 's/\*//' | \
-					sed 's/v//' | sed 's/0000//' | sed 's/\*//' | sed 's/0000//' \
-					>> $aliases
+					# TODO: Check for PCI in each line
+					alias_block=$(awk '/alias:/' "$moved_raw_modinfo_file" | awk \
+                                        '{print $2}' | awk -F : '{print $0}')
+                                        
+					for word in $alias_block;
+					do
+						alias_type=$(echo $word | awk -F ":" '{print $1}')
+						if [[ $alias_type == pci ]]
+						then
+							echo $word | awk -F ":" '{print $2}' | awk -F "bc" \
+                                                	'{print $1}' | sed 's/\*//' | sed 's/0000//' | sed 's/sd/:/' | \
+                                                	sed 's/\*//' | sed 's/sv/:/' | sed 's/\*//' | sed 's/0000//' | \
+                                                	sed 's/d/:/' | sed 's/\*//' | \
+                                                	sed 's/v//' | sed 's/0000//' | sed 's/\*//' | sed 's/0000//' \
+                                                	>> $aliases
+						fi
+					done
 				fi
 
 				# srcversion input (pull srcversion from moved_raw_modinfo_file)

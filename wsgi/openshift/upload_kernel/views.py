@@ -75,7 +75,6 @@ def unzip_file(kernel_object):
             srcversion_path = module_path + '/srcversion'
             alias_path = module_path + '/aliases'
 
-            #TODO: GET VERSION_NAME NULL ONES TO WORK
             version_name = 'NULL'
             srcversion_name = 'NULL'
             try:
@@ -86,8 +85,6 @@ def unzip_file(kernel_object):
                 srcversion_name = subprocess.check_output(['cat', '%s' % (srcversion_path)])
             except subprocess.CalledProcessError:
                 pass
-            #UPLOAD TO PCIMODULE DB
-            #TODO:
             m, created_m = PCIModule.objects.get_or_create(name=module_name, version=version_name, srcversion=srcversion_name)
             output = subprocess.check_output(['cat', '%s' % (alias_path)])
             m.save
@@ -122,5 +119,5 @@ def unzip_file(kernel_object):
                 pass
 
             print m.id
-            a, created_a = PCIAliases.objects.get_or_create(module_id=m.id, vendor=vendor, device=device, subvendor=subvendor, subdevice=device)
+            a, created_a = PCIAliases.objects.get_or_create(module_id=m.id, vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
             a.save
