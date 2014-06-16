@@ -53,14 +53,20 @@ def unzip_file(kernel_object):
     machine_name = file_path[:-7]
     output = subprocess.check_output(['ls', '%s' % (machine_name)])
     kernel_list =  (output).splitlines()
+
+    #FOR EACH KERNEL
     for kernel_path in kernel_list:
         # TODO: add support for more than just the pci modules
         kernel_name = kernel_path
+        #UPLOAD TO KERNELVERSION DB
         kv, created_kv = KernelVersion.objects.get_or_create(name=kernel_name)
+        kv.save
         kernel_path = machine_name + '/' + kernel_path + '/__pci_modules__'
-         
+        
         output = subprocess.check_output(['ls', '%s' % (kernel_path)])
         module_list = (output).splitlines()
+
+        #FOR EACH MODULE IN THAT KERNEL VERSION
         for module_path in module_list:
             module_name = module_path
             module_path = kernel_path + '/' + module_path
@@ -68,6 +74,8 @@ def unzip_file(kernel_object):
             version_path = module_path + '/version'
             srcversion_path = module_path + '/srcversion'
             alias_path = module_path + '/aliases'
+
+            #TODO: GET VERSION_NAME NULL ONES TO WORK
             versioin_name = 'NULL';
             try:
                 version_name = subprocess.check_output(['cat', '%s' % (version_path)])
@@ -75,8 +83,13 @@ def unzip_file(kernel_object):
                 continue
 
             srcversion_name = subprocess.check_output(['cat', '%s' % (srcversion_path)])
-            m, created_m = PCIModule.objects.get_or_create(name=module_name, version=version_name, srcversion=srcversion_named)
+
+            #UPLOAD TO PCIMODULE DB
+            #TODO:
+            m, created_m = PCIModule.objects.get_or_create(name=module_name, version=version_name, srcversion=srcversion_name)
             output = subprocess.check_output(['cat', '%s' % (alias_path)])
+            m.save
+            m.kernelVersionModuleConnector.add(kv)
             
             alias_list = (output.splitlines())
             for inst_alias in alias_list:
