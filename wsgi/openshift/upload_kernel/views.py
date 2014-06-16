@@ -7,7 +7,8 @@ from django.core.urlresolvers import reverse
 from upload_kernel.models import Kernel_Tarball
 from upload_kernel.models import Shell_Script
 from upload_kernel.forms import KernelTarballForm
-import os, gzip, settings, pdb
+import os, gzip, settings, pdb, subprocess
+from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
 
 def list(request):
 
@@ -43,7 +44,52 @@ def list(request):
 def unzip_file(kernel_object):
     added_folder_path = os.path.join(settings.MEDIA_ROOT, 'added/')
     file_path = os.path.join(settings.MEDIA_ROOT, kernel_object.decompressed_folder.name)
-    print "%s" % file_path
-    # TODO: on OSX, this was adding to the code base dir, not the static dir: (SEE ISSUE 5)
-    os.system('tar xvf ' + file_path + ' -C ' + added_folder_path)
+    
+    
+    os.system('tar xf ' + file_path + ' -C ' + added_folder_path)
     os.system('rm -f ' + file_path)
+
+    # start processing file
+    machine_name = file_path[:-7]
+    output = subprocess.check_output(['ls', '%s' % (machine_name)])
+    kernel_list =  (output).splitlines()
+    for kernel_path in kernel_list:
+        # TODO: add support for more than just the pci modules
+        kernel_name = kernel_path
+        kv, created_kv = KernelVersion.objects.get_or_create(name=kernel_name)
+        kernel_path = machine_name + '/' + kernel_path + '/__pci_modules__'
+         
+        output = subprocess.check_output(['ls', '%s' % (kernel_path)])
+        module_list = (output).splitlines()
+        for module_path in module_list:
+            module_name = module_path
+            module_path = kernel_path + '/' + module_path
+            
+            version_path = module_path + '/version'
+            srcversion_path = module_path + '/srcversion'
+            alias_path = module_path + '/aliases'
+            versioin_name = 'NULL';
+            try:
+                version_name = subprocess.check_output(['cat', '%s' % (version_path)])
+            except:
+                continue
+
+            srcversion_name = subprocess.check_output(['cat', '%s' % (srcversion_path)])
+            m, created_m = PCIModule.objects.get_or_create(name=module_name, version=version_name, srcversion=srcversion_named)
+            output = subprocess.check_output(['cat', '%s' % (alias_path)])
+            
+            alias_list = (output.splitlines())
+            for inst_alias in alias_list:
+                alias_component = (inst_alias).split(':')
+                vendor = 'null'
+                device = 'null'
+                subvendor = 'null'
+                subdevice = 'null'
+                try:
+                    vendor = alias_component[0]
+                    device = alias_component[1]
+                    subvendor = alias_component[2]
+                    subdevice = alias_component[3]
+                except:
+                    continue
+#                print 'vendor: ' + vendor + '\ndevice: ' + device + '\nsubvendor: ' + subvendor + '\nsubdevice: ' + subdevice + '\n'
