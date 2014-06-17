@@ -86,13 +86,13 @@ def unzip_file(kernel_object):
             except subprocess.CalledProcessError:
                 pass
             m, created_m = PCIModule.objects.get_or_create(name=module_name, version=version_name, srcversion=srcversion_name)
-            output = subprocess.check_output(['cat', '%s' % (alias_path)])
+            output = subprocess.check_output( ['cat', '%s' % (alias_path)] )
             m.save
             m.kernelVersionModuleConnector.add(kv)
             
             alias_list = (output.splitlines())
             for inst_alias in alias_list:
-                alias_component = (inst_alias).split(':')
+                alias_component = (inst_alias).rstrip('\\n').split(':')
                 vendor = 'null'
                 device = 'null'
                 subvendor = 'null'
