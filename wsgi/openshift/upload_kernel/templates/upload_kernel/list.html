@@ -2,10 +2,18 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Minimal Django File Upload Example</title>	
+		<title>Minimal Django File Upload Example</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>	
 	</head>
 
 	<body>
+		{% load bootstrap3 %}
 		<h3>
 			Welcome to the VML upload portal!
 		</h3>
@@ -24,15 +32,14 @@
 		<br />
 
 		<!-- Upload form. Note enctype attribute! -->
-        <form action="{% url "list" %}" method="post" enctype="multipart/form-data">
+	{% bootstrap_form form %}
+        <form action="{% url "list" %}" class="form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p>{{ form.non_field_errors }}</p>
-                <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-                <p>
-                        {{ form.docfile.errors }}
-                        {{ form.docfile }}
-                </p>
-                <p><input type="submit" value="Upload" /></p>
+		{% buttons %}
+			<button type="submit" class="btn btn-primary">
+				{% bootstrap_icon "star" %} Submit
+			</button>
+		{% endbuttons %}
         </form>
 		<br />
 		<br />
