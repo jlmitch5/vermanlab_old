@@ -5,12 +5,19 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from rest_framework import viewsets, routers
 from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
+import django_filters
 
 admin.autodiscover()
+
+class KernelVersionFilter(django_filters.FilterSet):
+    print "filter"
+    name = django_filters.CharFilter(name="name",lookup_type="icontains")
 
 # ViewSets define the view behavior.
 class KernelVersionViewSet(viewsets.ModelViewSet):
     model = KernelVersion
+    filter_class = KernelVersionFilter
+    filter_backends = (DjangoFilterBackend,)
 
 class PCIModuleViewSet(viewsets.ModelViewSet):
     model = PCIModule
@@ -24,6 +31,7 @@ router = routers.DefaultRouter()
 router.register(r'kernelversion', KernelVersionViewSet)
 router.register(r'pcimodule', PCIModuleViewSet)
 router.register(r'pcialiases', PCIAliasesViewSet)
+router.register(r'kernelversion/(?P<name>\d+)', KernelVersionViewSet)
 
 urlpatterns = patterns('',
     url(r'^$', 'views.home', name='home'),

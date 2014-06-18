@@ -175,11 +175,15 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'bootstrap3',
     'rest_framework',
+    'bootstrap3',
     'upload_kernel',
     'schema_kernel',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
