@@ -5,3 +5,8 @@ class KernelVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = KernelVersion
         fields = ('name',)
+
+class PCIModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PCIModule
+        fields = ('name', 'version', 'srcversion', 'kernelVersionModuleConnector')

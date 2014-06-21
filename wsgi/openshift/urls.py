@@ -16,5 +16,6 @@ urlpatterns = patterns('',
     url(r'^$', 'views.home', name='home'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^upload/', include('upload_kernel.urls')),
+    url(r'^diff/', include('diff_kernel.urls')),
     url(r'^api/', include('schema_kernel.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
