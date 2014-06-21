@@ -13,6 +13,9 @@
 		<form method="post">{% csrf_token %}
 			{{ form.kernel_one }}
 			{{ form.kernel_two }}
+			<button type="submit" class="btn btn-primary btn-xs">
+				Diff Kernels
+			</button>
 		</form>
 	</body>
 </html>
