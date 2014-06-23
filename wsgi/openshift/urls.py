@@ -4,11 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
-from schema_kernel.api import KernelVersionResource, PCIModuleResource, PCIAliasesResource
-
-kv_resource = KernelVersionResource()
-pci_mod_resource = PCIModuleResource()
-pci_aliases_resource = PCIAliasesResource()
 
 admin.autodiscover()
 

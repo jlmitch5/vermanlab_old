@@ -8,15 +8,40 @@
 		<script src="//code.jquery.com/jquery-1.11.1.min.js">
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	</head>
-	<body>
-		<h1>Kernel Diff</h1>
+	<body style="margin-left: 20px; margin-right: 20px;">
 		<form method="post">{% csrf_token %}
-			{{ form.kernel_one }}
-			{{ form.kernel_two }}
-			<button type="submit" class="btn btn-primary btn-xs">
-				Diff Kernels
-			</button>
+			<div style="margin-top: 20px; margin-bottom: 20px;">
+				<button type="submit" class="btn btn-primary btn-xl">
+					Diff Kernels
+				</button>
+			</div>
+			<div style="width: 50%; display: relative; float: left;">
+				{{ form.kernel_one }}
+			</div>
+			<div style="width: 50%; display: relative; float: right;">
+				{{ form.kernel_two }}
+			</div>
 		</form>
+		<br />
+		<div style="width: 50%; display: relative; float: left;">
+		{% if kv1_mods_list %}
+			{% for mod in kv1_mods_list %}
+				<p>
+					{{ mod.name }}
+				</p>
+			{% endfor %}
+		{% endif %}
+		</div>
+
+		<div style="width: 50%; display: relative; float: right;">
+		{% if kv2_mods_list %}
+			{% for mod in kv2_mods_list %}
+				<p>
+					{{ mod.name }}
+				</p>
+			{% endfor %}
+		{% endif %}
+		</div>
 	</body>
 </html>
 
