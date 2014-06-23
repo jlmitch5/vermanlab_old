@@ -12,6 +12,7 @@ def diff(request):
     kvs = zip(kvs, kvs)
     kv1_mods_list = []
     kv2_mods_list = []
+    list_names = []
     
     if request.method == 'POST':
         form = KernelDiffForm(request.POST, kv_list = kvs)
@@ -37,6 +38,7 @@ def diff(request):
             mods = json.loads(r2.text)
             kv1_mods_list = []
             kv2_mods_list = []
+            list_names = []
 
             for mod in mods:
                 mod_pretty_link = 'http://localhost:8000/api/mod_pretty/' + str(mod['id'])
@@ -47,7 +49,15 @@ def diff(request):
                 if kv1 in kv_str:
                     kv1_mods_list.append(mod_pretty)
                 else:
-                    kv2_mods_list.append(mod_pretty)               
+                    kv2_mods_list.append(mod_pretty)
+
+
+
+            names = set(i['name'] for i in kv1_mods_list+kv2_mods_list)
+            list_names = list(names)
+            list_names.sort()
+            print list_names
+
 
     else:
         form = KernelDiffForm(kv_list = kvs)
@@ -56,4 +66,5 @@ def diff(request):
     	'form': form,
         'kv1_mods_list': kv1_mods_list,
         'kv2_mods_list': kv2_mods_list,
+        'list_names': list_names,
     })

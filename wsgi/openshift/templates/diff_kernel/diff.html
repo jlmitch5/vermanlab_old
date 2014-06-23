@@ -23,7 +23,18 @@
 			</div>
 		</form>
 		<br />
-		<div style="width: 50%; display: relative; float: left;">
+		<div style="margin-top: 20px;">
+			{% if list_names %}
+				{% for name in list_names %}
+			<div style="margin-top: 5px; margin-bottom: 5px;">
+				<p>{{ name }}</p>
+				{% endfor %}
+			</div>
+			{% endif %}
+		</div>
+
+
+		<span style="width: 50%; display: relative; float: left;">
 		{% if kv1_mods_list %}
 			{% for mod in kv1_mods_list %}
 				<p>
