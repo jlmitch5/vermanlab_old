@@ -23,35 +23,33 @@
 			</div>
 		</form>
 		<br />
-<!-- 		<div style="margin-top: 20px;">
-			{% if list_names %}
-				{% for name in list_names %}
-			<div style="margin-top: 5px; margin-bottom: 5px;">
-				<p>{{ name }}</p>
+
+
+		<div style="margin-top: 20px;">
+			{% if display_list %}
+				{% for name in display_list %}
+				<div style="margin-top: 5px; margin-bottom: 5px;">
+					{% if name.kv_one_id != 'null' %}
+						<span style="width: 50%; display: relative; float: left;">
+							<p>{{ name.kv_one_id }}</p>
+						</span>
+					{% else %}
+						<span style="width: 50%; display: relative; float: left; color: #cc0000">
+							<p>null</p>
+						</span>
+					{% endif %}
+					{% if name.kv_two_id != 'null' %}
+						<span style="width: 50%; display: relative; float: right;">
+							<p>{{ name.kv_two_id }}</p>
+						</span>
+					{% else %}
+						<span style="width: 50%; display: relative; float: right; color: #cc0000">
+							<p>null</p>
+						</span>
+					{% endif %}
+				</div>
 				{% endfor %}
-			</div>
 			{% endif %}
-		</div>
- -->
-
-		<div style="width: 50%; display: relative; float: left;">
-		{% if kv1_mods_list %}
-			{% for mod in kv1_mods_list %}
-				<p>
-					{{ mod }}
-				</p>
-			{% endfor %}
-		{% endif %}
-		</div>
-
-		<div style="width: 50%; display: relative; float: right;">
-		{% if kv2_mods_list %}
-			{% for mod in kv2_mods_list %}
-				<p>
-					{{ mod }}
-				</p>
-			{% endfor %}
-		{% endif %}
 		</div>
 	</body>
 </html>

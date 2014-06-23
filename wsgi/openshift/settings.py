@@ -176,6 +176,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'upload_kernel',
     'schema_kernel',
+    'diff_kernel',
 )
 
 REST_FRAMEWORK = {

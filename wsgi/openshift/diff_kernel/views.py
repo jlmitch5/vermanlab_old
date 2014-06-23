@@ -6,24 +6,38 @@ from diff_kernel.forms import KernelDiffForm
 
 # Create your views here.
 def diff(request):
+    # this gets the list of the kernel versions
     if settings.ON_OPENSHIFT:
         r = requests.get('http://python-jmitchel.rhcloud.com/api/kv_list/', params=request.GET)
     else:       
         r = requests.get('http://localhost:8000/api/kv_list/', params=request.GET)
+
     kvs = json.loads(r.text)
     kvs= list((e[str('name')] for e in kvs))
+
+    #kvs: the list of the kernel versiosn
     kvs = zip(kvs, kvs)
-    kv1_mods_list = []
-    kv2_mods_list = []
-    list_names = []
+
+    display_list = []
     
     if request.method == 'POST':
         form = KernelDiffForm(request.POST, kv_list = kvs)
         if form.is_valid():
-            # process the form data
+            #k1 and k2 are the selected kernel versions (names)
             k1 = form.cleaned_data['kernel_one']
             k2 = form.cleaned_data['kernel_two']
 
+            if settings.ON_OPENSHIFT:
+                kernels_to_diff_link = 'http://python-jmitchel.rhcloud.com/api/pci_mod_list_intersection/' + k1 + '/' + k2
+            else:
+                kernels_to_diff_link = 'http://localhost:8000/api/pci_mod_list_intersection/' + k1 + '/' + k2
+
+            r2 = requests.get(kernels_to_diff_link, params=request.GET)
+
+            #mods are all the modules from the kernel diff
+            mods = json.loads(r2.text)
+
+            #this grabs the id of the kernel version
             if settings.ON_OPENSHIFT:
                 kernel_id_1_link = 'http://python-jmitchel.rhcloud.com/api/kv_id/' + k1
                 kernel_id_2_link = 'http://python-jmitchel.rhcloud.com/api/kv_id/' + k2
@@ -35,49 +49,41 @@ def diff(request):
             kv2_r = requests.get(kernel_id_2_link, params=request.GET)
             kv1 = json.loads(kv1_r.text)
             kv2 = json.loads(kv2_r.text)
+            # kv1 and kv2 are the selected kernel version IDs
             kv1 = kv1['id']
             kv2 = kv2['id']
 
-            if settings.ON_OPENSHIFT:
-                kernels_to_diff_link = 'http://python-jmitchel.rhcloud.com/api/pci_mod_list_intersection/' + k1 + '/' + k2
-            else:
-                kernels_to_diff_link = 'http://localhost:8000/api/pci_mod_list_intersection/' + k1 + '/' + k2
+            display_list = []
 
-            r2 = requests.get(kernels_to_diff_link, params=request.GET)
-
-            mods = json.loads(r2.text)
-            kv1_mods_list = []
-            kv2_mods_list = []
-            list_names = []
-
+            previous_name = 'null'
             for mod in mods:
-                if settings.ON_OPENSHIFT:
-                    mod_pretty_link = 'http://python-jmitchel.rhcloud.com/api/mod_pretty/' + str(mod['id'])
+                if mod['name'] == previous_name:
+                    kv_str = mod['kernelVersionModuleConnector']
+                    if kv1 in kv_str:
+                        display_list[-1]['kv_one_id'] = mod['id']
+                    else:
+                        display_list[-1]['kv_two_id'] = mod['id']
+                    previous_name = mod['name']
                 else:
-                    mod_pretty_link = 'http://localhost:8000/api/mod_pretty/' + str(mod['id'])
-                req_mod_pretty = requests.get(mod_pretty_link, params=request.GET)
-                mod_pretty = json.loads(req_mod_pretty.text)
+                    display_list.append({'name': mod['name'], 'kv_one_id': 'null', 'kv_two_id': 'null'})
+                    kv_str = mod['kernelVersionModuleConnector']
+                    if kv1 in kv_str:
+                        display_list[-1]['kv_one_id'] = mod['id']
+                    else:
+                        display_list[-1]['kv_two_id'] = mod['id']
+                    previous_name = mod['name']
 
-                kv_str = mod['kernelVersionModuleConnector']
-                if kv1 in kv_str:
-                    kv1_mods_list.append(mod_pretty)
-                else:
-                    kv2_mods_list.append(mod_pretty)
-
-
-
-            names = set(i['name'] for i in kv1_mods_list+kv2_mods_list)
-            list_names = list(names)
-            list_names.sort()
-            print list_names
-
+            #     if settings.ON_OPENSHIFT:
+            #         mod_pretty_link = 'http://python-jmitchel.rhcloud.com/api/mod_pretty/' + str(mod['id'])
+            #     else:
+            #         mod_pretty_link = 'http://localhost:8000/api/mod_pretty/' + str(mod['id'])
+            #     req_mod_pretty = requests.get(mod_pretty_link, params=request.GET)
+            #     mod_pretty = json.loads(req_mod_pretty.text)
 
     else:
         form = KernelDiffForm(kv_list = kvs)
 
     return render(request, 'diff_kernel/diff.html', { 
     	'form': form,
-        'kv1_mods_list': kv1_mods_list,
-        'kv2_mods_list': kv2_mods_list,
-        'list_names': list_names,
+        'display_list': display_list,
     })
