@@ -5,31 +5,52 @@
 		<title>VML|Kernel Diff</title>
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-		<script src="//code.jquery.com/jquery-1.11.1.min.js">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.css">
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
 	</head>
 	<body style="margin-left: 20px; margin-right: 20px;">
-		<form method="post">{% csrf_token %}
-			<div style="margin-top: 20px; margin-bottom: 20px;">
-				<button type="submit" class="btn btn-primary btn-xl">
-					Diff Kernels
-				</button>
-			</div>
-			<div style="width: 50%; display: relative; float: left;">
-				{{ form.kernel_one }}
-			</div>
-			<div style="width: 50%; display: relative; float: right;">
-				{{ form.kernel_two }}
-			</div>
-		</form>
-		<br />
+		<div style= "padding-top: 20px; padding-bottom: 20px;">
+			<form method="post">{% csrf_token %}
+				<div style="width: 100px; display: relative; float:left;">
+					<button type="submit" class="btn btn-primary">
+						Diff Kernels
+					</button>
+				</div>
+				<div style="width: calc(50% - 50px); display: relative; float: left;">
+					{% load widget_tweaks %}
+					{{ form.kernel_one|append_attr:"class:selectpicker"|append_attr:"data-style:btn-success"|append_attr:"data-live-search:true" }}
+					<script type="text/javascript">
+						$('.selectpicker').selectpicker('render');
+					</script>
+				</div>
+				<div style="width: calc(50% - 50px); display: relative; float: right;">
+					{{ form.kernel_two|append_attr:"class: selectpicker"|append_attr:"data-style: btn-success"|append_attr:"data-live-search: true" }}
+					<script type="text/javascript">
+						$('.selectpicker').selectpicker('render');
+					</script>
+				</div>
+			</form>
+		</div>
 
 
 		<div style="margin-top: 20px;">
-			{% if display_list %}
+			{% if display_list and api_url_root %}
 				{% for name in display_list %}
-				<div style="margin-top: 5px; margin-bottom: 5px;">
-					<span style="width: 50%; display: relative; float: left; border-bottom: 1px solid #000;">
+				<div style="padding-top: 5px; padding-bottom: 8px;">
+					<span style="width: 100px; display: relative; float: left; border-top: 1px solid #ccc; padding-top: 5px">
+						{% if name.kv_one_id != 'null' %}
+							{% if name.kv_two_id != 'null' %}
+								<p style="color: green; font-weight: bold;">both</p>
+							{% else %}
+								<p style="color: #555;">one</p>
+							{% endif %}
+						{% else %}
+							<p style="color: #555;">two</p>
+						{% endif %}
+					</span>
+					<span style="width: calc(50% - 50px); display: relative; float: left; border-top: 1px solid #ccc; padding-top: 5px">
 						{% if name.kv_one_id != 'null' %}
 							<p class="{{ name.kv_one_id }}">
 								<script>
@@ -39,7 +60,17 @@
 						                    dataType: "text",
 						                    success: function(data) {
 						                        var json = $.parseJSON(data);
-						                        $(".{{ name.kv_one_id }}").append(json.name + ', ' + json.version + ', ' + json.srcversion);
+						                        var s = ""
+						                        s += json.name
+						                        if (json.version != 'NULL') {
+						                        	s += ', '
+						                        	s += json.version
+						                        }
+						                        if (json.srcversion != 'NULL') {
+						                        	s += ', '
+						                        	s += json.srcversion
+						                        }
+						                        $(".{{ name.kv_one_id }}").append(s);
 						                    }
 						                });
 							        });
@@ -49,7 +80,7 @@
 							<p style="font-weight: bold; color: #cc0000;">null</p>
 						{% endif %}
 					</span>
-					<span style="width: 50%; display: relative; float: right; border-bottom: 1px solid #000;">
+					<span style="width: calc(50% - 50px); display: relative; float: right; border-top: 1px solid #ccc; padding-top: 5px;">
 						{% if name.kv_two_id != 'null' %}
 							<p class="{{ name.kv_two_id }}">
 								<script>
@@ -59,7 +90,17 @@
 						                    dataType: "text",
 						                    success: function(data) {
 						                        var json = $.parseJSON(data);
-						                        $(".{{ name.kv_two_id }}").append(json.name + ', ' + json.version + ', ' + json.srcversion);
+						                        var s = ""
+						                        s += json.name
+						                        if (json.version != 'NULL') {
+						                        	s += ', '
+						                        	s += json.version
+						                        }
+						                        if (json.srcversion != 'NULL') {
+						                        	s += ', '
+						                        	s += json.srcversion
+						                        }
+						                        $(".{{ name.kv_two_id }}").append(s);
 						                    }
 						                });
 							        });

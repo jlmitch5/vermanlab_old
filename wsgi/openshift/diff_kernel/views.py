@@ -11,6 +11,10 @@ def diff(request):
         r = requests.get('http://python-jmitchel.rhcloud.com/api/kv_list/', params=request.GET)
     else:       
         r = requests.get('http://localhost:8000/api/kv_list/', params=request.GET)
+    if settings.ON_OPENSHIFT:
+        api_url_root = 'http://python-jmitchel.rhcloud.com'
+    else:
+        api_url_root = 'http://localhost:8000'
 
     kvs = json.loads(r.text)
     kvs= list((e[str('name')] for e in kvs))
@@ -86,4 +90,5 @@ def diff(request):
     return render(request, 'diff_kernel/diff.html', { 
     	'form': form,
         'display_list': display_list,
+        'api_url_root': api_url_root,
     })

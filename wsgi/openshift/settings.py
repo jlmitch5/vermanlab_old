@@ -174,6 +174,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'rest_framework',
+    'widget_tweaks',
     'upload_kernel',
     'schema_kernel',
     'diff_kernel',
