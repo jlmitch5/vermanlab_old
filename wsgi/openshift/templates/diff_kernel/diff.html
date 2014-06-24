@@ -29,24 +29,46 @@
 			{% if display_list %}
 				{% for name in display_list %}
 				<div style="margin-top: 5px; margin-bottom: 5px;">
-					{% if name.kv_one_id != 'null' %}
-						<span style="width: 50%; display: relative; float: left;">
-							<p>{{ name.kv_one_id }}</p>
-						</span>
-					{% else %}
-						<span style="width: 50%; display: relative; float: left; color: #cc0000">
-							<p>null</p>
-						</span>
-					{% endif %}
-					{% if name.kv_two_id != 'null' %}
-						<span style="width: 50%; display: relative; float: right;">
-							<p>{{ name.kv_two_id }}</p>
-						</span>
-					{% else %}
-						<span style="width: 50%; display: relative; float: right; color: #cc0000">
-							<p>null</p>
-						</span>
-					{% endif %}
+					<span style="width: 50%; display: relative; float: left; border-bottom: 1px solid #000;">
+						{% if name.kv_one_id != 'null' %}
+							<p class="{{ name.kv_one_id }}">
+								<script>
+							        $(document).ready(function() {						         
+						                $.ajax({
+						                    url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_one_id }}",
+						                    dataType: "text",
+						                    success: function(data) {
+						                        var json = $.parseJSON(data);
+						                        $(".{{ name.kv_one_id }}").append(json.name + ', ' + json.version + ', ' + json.srcversion);
+						                    }
+						                });
+							        });
+							    </script>
+						    </p>
+						{% else %}
+							<p style="font-weight: bold; color: #cc0000;">null</p>
+						{% endif %}
+					</span>
+					<span style="width: 50%; display: relative; float: right; border-bottom: 1px solid #000;">
+						{% if name.kv_two_id != 'null' %}
+							<p class="{{ name.kv_two_id }}">
+								<script>
+							        $(document).ready(function() {						         
+						                $.ajax({
+						                    url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_two_id }}",
+						                    dataType: "text",
+						                    success: function(data) {
+						                        var json = $.parseJSON(data);
+						                        $(".{{ name.kv_two_id }}").append(json.name + ', ' + json.version + ', ' + json.srcversion);
+						                    }
+						                });
+							        });
+							    </script>
+						    </p>
+						{% else %}
+							<p style="font-weight: bold; color: #cc0000;">null</p>
+						{% endif %}
+					</span>
 				</div>
 				{% endfor %}
 			{% endif %}
