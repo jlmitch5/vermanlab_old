@@ -97,27 +97,26 @@ def unzip_file(kernel_object):
                 device = 'null'
                 subvendor = 'null'
                 subdevice = 'null'
-            try:
-		if alias_component[0]:
-                    vendor = alias_component[0]
-            except:
-                pass
-            try:
-                if alias_component[1]:
-                    device = alias_component[1]
-            except:
-                pass
-            try:
-                if alias_component[2]:
-                    subvendor = alias_component[2]
-            except:
-                pass
-            try:
-                if alias_component[3]:
-                    subdevice = alias_component[3]
-            except:
-                pass
+                try:
+                    if alias_component[0]:
+                        vendor = alias_component[0]
+                except:
+                    pass
+                try:
+                    if alias_component[1]:
+                        device = alias_component[1]
+                except:
+                    pass
+                try:
+                    if alias_component[2]:
+                        subvendor = alias_component[2]
+                except:
+                    pass
+                try:
+                    if alias_component[3]:
+                        subdevice = alias_component[3]
+                except:
+                    pass
 
-            print m.id
-            a, created_a = PCIAliases.objects.get_or_create(module_id=m.id, vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
-            a.save
+                a, created_a = PCIAliases.objects.get_or_create(module_id=m.id, vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
+                a.save

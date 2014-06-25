@@ -1,5 +1,5 @@
-from schema_kernel.models import KernelVersion, PCIModule
-from schema_kernel.serializers import KernelVersionSerializer, KernelVersionIDSerializer, PCIModuleSerializer, PCIModuleIDSerializer, PCIModuleInfoSerializer
+from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
+from schema_kernel.serializers import KernelVersionSerializer, KernelVersionIDSerializer, PCIModuleSerializer, PCIModuleIDSerializer, PCIModuleInfoSerializer, AliasDiffSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -94,4 +94,17 @@ class ModPretty(APIView):
         serializer = PCIModuleInfoSerializer(mod)
         return Response(serializer.data)
 
+class AliasDiff(APIView):
+    def get_object(self, mod_id):
+        try:
+            return PCIModule.objects.get(id=mod_id)
+        except PCIModule.DoesNotExist:
+            raise Http404
+
+    def get(self, request, mod_id_1, mod_id_2, format=None):
+        mod1 = self.get_object(mod_id_1)
+        mod2 = self.get_object(mod_id_2)
+        aliases = PCIAliases.objects.filter(module=mod_id_1)
+        serializer = AliasDiffSerializer(aliases)
+        return Response(serializer.data)
 

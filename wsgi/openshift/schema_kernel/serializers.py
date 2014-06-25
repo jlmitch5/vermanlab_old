@@ -25,3 +25,8 @@ class PCIModuleInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PCIModule
         fields = ('name', 'version', 'srcversion',)
+
+class AliasDiffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PCIAliases
+        fields = ('module', 'vendor', 'device', 'subvendor', 'subdevice')
