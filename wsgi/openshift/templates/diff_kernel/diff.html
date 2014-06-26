@@ -28,7 +28,7 @@
 			  </div>
 			</div>
 			<div class="progress-modules progress progress-striped active" style="width: calc(50% - 10px); float: right;">
-			  <div class="progress-bar progress-bar-default pba" role="progressbar" aria-valuenow="-0" aria-valuemin="0" aria-valuemax="{{ display_list_length }}" style="width: 0%;">
+			  <div class="progress-bar progress-bar-default pba" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ display_list_length }}" style="width: 0%;">
 			  </div>
 			</div>
 		{% endif %}
@@ -168,7 +168,7 @@
 									            var s = ""
 									            s += JSON.stringify(json)
 									            $(".alias-{{ name.kv_two_id }}").text(s)
-									            {% if kv_one_id == 'null' %}
+									            {% if name.kv_one_id == 'null' %}
 										            var value = parseInt($('.pba').attr('aria-valuenow'));
 													value = value + 1;
 													var percent = Math.ceil(value/{{ display_list_length }} * 100);
