@@ -1,5 +1,5 @@
 from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
-from schema_kernel.serializers import KernelVersionSerializer, KernelVersionIDSerializer, PCIModuleSerializer, PCIModuleIDSerializer, PCIModuleInfoSerializer, AliasDiffSerializer
+from schema_kernel.serializers import KernelVersionSerializer, KernelVersionIDSerializer, PCIModuleSerializer, PCIModuleIDSerializer, PCIModuleInfoSerializer, AliasDiffSerializer, AliasByModSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -105,6 +105,37 @@ class AliasDiff(APIView):
         mod1 = self.get_object(mod_id_1)
         mod2 = self.get_object(mod_id_2)
         aliases = PCIAliases.objects.filter(module=mod_id_1)
+        aliases2 = PCIAliases.objects.filter(module=mod_id_2)
+        # for alias in aliases:
+        #     vendor = (alias.vendor)
+        #     device = (alias.device)
+        #     subvendor = (alias.subvendor)
+        #     subdevice = (alias.subdevice)
+        #     aliases = aliases.exclude(vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
+        #     aliases2 = aliases2.exclude(vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
+        # for alias in aliases2:
+        #     vendor = (alias.vendor)
+        #     device = (alias.device)
+        #     subvendor = (alias.subvendor)
+        #     subdevice = (alias.subdevice)
+        #     aliases = aliases.exclude(vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
+        #     aliases2 = aliases2.exclude(vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
+        aliases = aliases | aliases2
+        if aliases:
+            print True
         serializer = AliasDiffSerializer(aliases)
+        return Response(serializer.data)
+
+class AliasByMod(APIView):
+    def get_object(self, module):
+        try:
+            return PCIModule.objects.get(id=module)
+        except PCIModule.DoesNotExist:
+            raise Http404
+
+    def get(self, request, module, format=None):
+        mod = self.get_object(module)
+        aliases = PCIAliases.objects.filter(module=module)
+        serializer = AliasByModSerializer(aliases)
         return Response(serializer.data)
 

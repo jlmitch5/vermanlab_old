@@ -30,3 +30,8 @@ class AliasDiffSerializer(serializers.ModelSerializer):
     class Meta:
         model = PCIAliases
         fields = ('module', 'vendor', 'device', 'subvendor', 'subdevice')
+
+class AliasByModSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PCIAliases
+        fields = ('module', 'vendor', 'device', 'subvendor', 'subdevice')

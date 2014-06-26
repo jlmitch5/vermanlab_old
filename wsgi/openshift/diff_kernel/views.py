@@ -23,6 +23,7 @@ def diff(request):
     kvs = zip(kvs, kvs)
 
     display_list = []
+    display_list_length = 0
     
     if request.method == 'POST':
         form = KernelDiffForm(request.POST, kv_list = kvs)
@@ -84,6 +85,8 @@ def diff(request):
             #     req_mod_pretty = requests.get(mod_pretty_link, params=request.GET)
             #     mod_pretty = json.loads(req_mod_pretty.text)
 
+            display_list_length = len(display_list)
+
     else:
         form = KernelDiffForm(kv_list = kvs)
 
@@ -91,4 +94,5 @@ def diff(request):
     	'form': form,
         'display_list': display_list,
         'api_url_root': api_url_root,
+        'display_list_length': display_list_length,
     })
