@@ -99,6 +99,8 @@
 
 						<script>
 							$(document).ready(function() {
+								var alias_diff_kv_one = []
+								var alias_diff_kv_two = []
 
 
 								{% if name.kv_one_id != 'null' %}			         
@@ -136,7 +138,6 @@
 								        success: function(data) {
 								        	$(".alias-{{ name.kv_one_id }}").text("")
 								        	var json = $.parseJSON(data)
-								        	var alias_diff_kv_one = []
 								        	$.each(json, function (index, value) {
 								        		var s=""
 								        		if (value.vendor != "null") {
@@ -210,7 +211,7 @@
 
 								            $(".alias-{{ name.kv_two_id }}").text("")
 								        	var json = $.parseJSON(data)
-								        	var alias_diff_kv_two = []
+
 								        	$.each(json, function (index, value) {
 								        		var s=""
 								        		if (value.vendor != "null") {
@@ -249,12 +250,13 @@
 					    		{% endif %}
 
 
+					    		$.each(alias_diff_kv_one, function (index, value) {
+					    			$(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+value+"</p>")
+					    		})
+
+
 							})
 						</script>
-
-
-
-
 
 
 				{% endfor %}
