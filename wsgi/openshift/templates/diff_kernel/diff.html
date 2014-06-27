@@ -99,86 +99,156 @@
 
 						<script>
 							$(document).ready(function() {
+
+
 								{% if name.kv_one_id != 'null' %}			         
-							    $.ajax({
-							        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_one_id }}",
-							        dataType: "text",
-							        success: function(data) {
-							            var json = $.parseJSON(data)
-							            var s = ""
-							            s += json.name
-							            if (json.version != 'NULL') {
-							            	s += ', '
-							            	s += json.version
-							            }
-							            if (json.srcversion != 'NULL') {
-							            	s += ', '
-							            	s += json.srcversion
-							            }
-							            var value = parseInt($('.pbm').attr('aria-valuenow'));
-										value = value + 1;
-										var percent = Math.ceil(value/{{ display_list_length }} * 100);
-										$('.pbm').css('width', percent+'%').attr('aria-valuenow', value);
-							            $(".{{ name.kv_one_id }}").text(s)
-							            $.ajax({
-							            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_one_id }}",
-									        dataType: "text",
-									        success: function(data) {
-									            var json = $.parseJSON(data)
-									            var s = ""
-									            s += JSON.stringify(json)
-									            $(".alias-{{ name.kv_one_id }}").text(s)
+								    $.ajax({
+								        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_one_id }}",
+								        dataType: "text",
+								        success: function(data) {
+
+
+								            var json = $.parseJSON(data)
+								            var s = ""
+								            s += json.name
+								            if (json.version != 'NULL') {
+								            	s += ', '
+								            	s += json.version
+								            }
+								            if (json.srcversion != 'NULL') {
+								            	s += ', '
+								            	s += json.srcversion
+								            }
+								            $(".{{ name.kv_one_id }}").text(s)
+
+
+								            var value = parseInt($('.pbm').attr('aria-valuenow'));
+											value = value + 1;
+											var percent = Math.ceil(value/{{ display_list_length }} * 100);
+											$('.pbm').css('width', percent+'%').attr('aria-valuenow', value);
+								        }
+								    })
+
+
+								    $.ajax({
+						            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_one_id }}",
+								        dataType: "text",
+								        success: function(data) {
+								        	$(".alias-{{ name.kv_one_id }}").text("")
+								        	var json = $.parseJSON(data)
+								        	var alias_diff_kv_one = []
+								        	$.each(json, function (index, value) {
+								        		var s=""
+								        		if (value.vendor != "null") {
+								        			s += ("00000" + value.vendor).slice(-4);
+								        		}
+								        		if (value.device != "null") {
+								        			s += ":"
+								        			s += ("00000" + value.device).slice(-4);
+								        		}
+								        		if (value.subvendor != "null") {
+								        			s += ":"
+								        			s += ("00000" + value.subvendor).slice(-4);
+								        		}
+								        		if (value.subdevice != "null") {
+								        			s += ":"
+								        			s += ("00000" + value.subdevice).slice(-4);
+								        		}
+								        		alias_diff_kv_one.push(s)
+												// $(".alias-{{ name.kv_one_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s+"</p>")
+										    });
+
+								            var value = parseInt($('.pba').attr('aria-valuenow'));
+											value = value + 1;
+											var percent = Math.ceil(value/{{ display_list_length }} * 100);
+											$('.pba').css('width', percent+'%').attr('aria-valuenow', value);
+
+
+								        }
+						           	})
+
+
+							    {% endif %}
+
+
+							    {% if name.kv_two_id != 'null' %}			         
+								    $.ajax({
+								        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_two_id }}",
+								        dataType: "text",
+								        success: function(data) {
+
+
+								            var json = $.parseJSON(data)
+								            var s = ""
+								            s += json.name
+								            if (json.version != 'NULL') {
+								            	s += ', '
+								            	s += json.version
+								            }
+								            if (json.srcversion != 'NULL') {
+								            	s += ', '
+								            	s += json.srcversion
+								            }
+								            $(".{{ name.kv_two_id }}").text(s)
+
+
+								            {% if name.kv_one_id == 'null' %}
+								            	var value = parseInt($('.pbm').attr('aria-valuenow'));
+												value = value + 1;
+												var percent = Math.ceil(value/{{ display_list_length }} * 100);
+												$('.pbm').css('width', percent+'%').attr('aria-valuenow', value);
+								            {% endif %}
+								        }
+								    })
+
+
+									$.ajax({
+						            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_two_id }}",
+								        dataType: "text",
+								        success: function(data) {
+
+
+								            $(".alias-{{ name.kv_two_id }}").text("")
+								        	var json = $.parseJSON(data)
+								        	var alias_diff_kv_two = []
+								        	$.each(json, function (index, value) {
+								        		var s=""
+								        		if (value.vendor != "null") {
+								        			s += ("00000" + value.vendor).slice(-4);
+								        		}
+								        		if (value.device != "null") {
+								        			s += ":"
+								        			s += ("00000" + value.device).slice(-4);
+								        		}
+								        		if (value.subvendor != "null") {
+								        			s += ":"
+								        			s += ("00000" + value.subvendor).slice(-4);
+								        		}
+								        		if (value.subdevice != "null") {
+								        			s += ":"
+								        			s += ("00000" + value.subdevice).slice(-4);
+								        		}
+								        		alias_diff_kv_two.push(s)
+												// $(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s+"</p>")
+										    });
+
+
+
+								            {% if name.kv_one_id == 'null' %}
 									            var value = parseInt($('.pba').attr('aria-valuenow'));
 												value = value + 1;
 												var percent = Math.ceil(value/{{ display_list_length }} * 100);
 												$('.pba').css('width', percent+'%').attr('aria-valuenow', value);
-									        }
-							           	})
-							        }
-							    })
-							    {% endif %}
-							    {% if name.kv_two_id != 'null' %}			         
-							    $.ajax({
-							        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_two_id }}",
-							        dataType: "text",
-							        success: function(data) {
-							            var json = $.parseJSON(data)
-							            var s = ""
-							            s += json.name
-							            if (json.version != 'NULL') {
-							            	s += ', '
-							            	s += json.version
-							            }
-							            if (json.srcversion != 'NULL') {
-							            	s += ', '
-							            	s += json.srcversion
-							            }
-							            {% if name.kv_one_id == 'null' %}
-							            	var value = parseInt($('.pbm').attr('aria-valuenow'));
-											value = value + 1;
-											var percent = Math.ceil(value/{{ display_list_length }} * 100);
-											$('.pbm').css('width', percent+'%').attr('aria-valuenow', value);
-							            {% endif %}
-							            $(".{{ name.kv_two_id }}").text(s)
-							            $.ajax({
-							            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_two_id }}",
-									        dataType: "text",
-									        success: function(data) {
-									            var json = $.parseJSON(data)
-									            var s = ""
-									            s += JSON.stringify(json)
-									            $(".alias-{{ name.kv_two_id }}").text(s)
-									            {% if name.kv_one_id == 'null' %}
-										            var value = parseInt($('.pba').attr('aria-valuenow'));
-													value = value + 1;
-													var percent = Math.ceil(value/{{ display_list_length }} * 100);
-													$('.pba').css('width', percent+'%').attr('aria-valuenow', value);
-												{% endif %}
-									        }
-							           	})
-							        }
-							    })
-							    {% endif %}
+											{% endif %}
+
+
+								        }
+						           	})
+
+								    
+					    		{% endif %}
+
+
 							})
 						</script>
 
