@@ -27,10 +27,10 @@
 
 			  </div>
 			</div>
-			<div class="progress-modules progress progress-striped active" style="width: calc(50% - 10px); float: right;">
+<!-- 			<div class="progress-modules progress progress-striped active" style="width: calc(50% - 10px); float: right;">
 			  <div class="progress-bar progress-bar-default pba" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ display_list_length }}" style="width: 0%;">
 			  </div>
-			</div>
+			</div> -->
 		{% endif %}
   </div>
 </div>
@@ -98,8 +98,6 @@
 
 						<script>
 							$(document).ready(function() {
-								aliases_diff_1 = []
-								aliases_diff_2 = []
 
 
 								{% if name.kv_one_id != 'null' %}
@@ -130,49 +128,107 @@
 											$('.pbm').css('width', percent+'%').attr('aria-valuenow', value);
 								        }
 								    })
+								{% endif %}
 
 
-								    $.ajax({
-						            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_one_id }}",
-								        dataType: "text",
-								        success: function(data) {
-								        	$(".alias-{{ name.kv_one_id }}").text("")
-								        	var json = $.parseJSON(data)
-								        	$.each(json, function (index, value) {
-								        		var s=""
-								        		if (value.vendor != "null") {
-								        			s += ("00000" + value.vendor).slice(-4);
-								        		}
-								        		if (value.device != "null") {
-								        			s += ":"
-								        			s += ("00000" + value.device).slice(-4);
-								        		}
-								        		if (value.subvendor != "null") {
-								        			s += ":"
-								        			s += ("00000" + value.subvendor).slice(-4);
-								        		}
-								        		if (value.subdevice != "null") {
-								        			s += ":"
-								        			s += ("00000" + value.subdevice).slice(-4);
-								        		}
+								{% if name.kv_one_id != 'null' and name.kv_two_id != 'null' %}
+
+									$.when(
+
+									    $.ajax({
+							            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_one_id }}",
+									        dataType: "text",
+									        success: function(data) {
+									        	aliases_diff_1 = []
+									        	$(".alias-{{ name.kv_one_id }}").text("")
+									        	var json = $.parseJSON(data)
+									        	$.each(json, function (index, value) {
+									        		var s=""
+									        		if (value.vendor != "null") {
+									        			s += ("00000" + value.vendor).slice(-4);
+									        		}
+									        		if (value.device != "null") {
+									        			s += ":"
+									        			s += ("00000" + value.device).slice(-4);
+									        		}
+									        		if (value.subvendor != "null") {
+									        			s += ":"
+									        			s += ("00000" + value.subvendor).slice(-4);
+									        		}
+									        		if (value.subdevice != "null") {
+									        			s += ":"
+									        			s += ("00000" + value.subdevice).slice(-4);
+									        		}
 
 
-								        		{% if name.kv_two_id != 'null' %}
-													aliases_diff_1.push(s)
-												{% endif %}
+									        		{% if name.kv_two_id != 'null' %}
+														aliases_diff_1.push(s)
+													{% endif %}
 
 
-										    });
+											    })
+											    return aliases_diff_1
 
-								            var value = parseInt($('.pba').attr('aria-valuenow'));
-											value = value + 1;
-											var percent = Math.ceil(value/{{ display_list_length }} * 100);
-											$('.pba').css('width', percent+'%').attr('aria-valuenow', value);
+									   //          var value = parseInt($('.pba').attr('aria-valuenow'));
+												// value = value + 1;
+												// var percent = Math.ceil(value/{{ display_list_length }} * 100);
+												// $('.pba').css('width', percent+'%').attr('aria-valuenow', value);
 
-											
-								        }
-						           	})
+												
+									        }
+							           	}),
 
+										$.ajax({
+							            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_two_id }}",
+									        dataType: "text",
+									        success: function(data) {
+									        	aliases_diff_2 = []
+									            $(".alias-{{ name.kv_two_id }}").text("")
+									        	var json = $.parseJSON(data)
+									        	$.each(json, function (index, value) {
+									        		var s=""
+									        		if (value.vendor != "null") {
+									        			s += ("00000" + value.vendor).slice(-4);
+									        		}
+									        		if (value.device != "null") {
+									        			s += ":"
+									        			s += ("00000" + value.device).slice(-4);
+									        		}
+									        		if (value.subvendor != "null") {
+									        			s += ":"
+									        			s += ("00000" + value.subvendor).slice(-4);
+									        		}
+									        		if (value.subdevice != "null") {
+									        			s += ":"
+									        			s += ("00000" + value.subdevice).slice(-4);
+									        		}
+									        		{% if name.kv_one_id != 'null' %}
+									        			aliases_diff_2.push(s)
+									        		{% endif %}
+											    });
+											    return aliases_diff_2
+
+									        }
+							           	})
+
+									).done(function(aliases_diff_1, aliases_diff_2) {
+
+									
+										// var value = parseInt($('.pba').attr('aria-valuenow'));
+										// value = value + 1;
+										// var percent = Math.ceil(value/{{ display_list_length }} * 100);
+										// $('.pba').css('width', percent+'%').attr('aria-valuenow', value);
+
+										while (aliases_diff_1.length > 0) {
+											var s_1 = aliases_diff_1.pop()
+											$(".alias-{{ name.kv_one_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_1+"</p>")
+										}
+										while (aliases_diff_2.length > 0) {
+											var s_2 = aliases_diff_2.pop()
+											$(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_2+"</p>")
+										}
+
+									});
 
 							    {% endif %}
 
@@ -209,62 +265,7 @@
 								        }
 								    })
 
-
-									$.ajax({
-						            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_two_id }}",
-								        dataType: "text",
-								        success: function(data) {
-
-
-								            $(".alias-{{ name.kv_two_id }}").text("")
-								        	var json = $.parseJSON(data)
-
-								        	$.each(json, function (index, value) {
-								        		var s=""
-								        		if (value.vendor != "null") {
-								        			s += ("00000" + value.vendor).slice(-4);
-								        		}
-								        		if (value.device != "null") {
-								        			s += ":"
-								        			s += ("00000" + value.device).slice(-4);
-								        		}
-								        		if (value.subvendor != "null") {
-								        			s += ":"
-								        			s += ("00000" + value.subvendor).slice(-4);
-								        		}
-								        		if (value.subdevice != "null") {
-								        			s += ":"
-								        			s += ("00000" + value.subdevice).slice(-4);
-								        		}
-								        		{% if name.kv_one_id != 'null' %}
-								        			aliases_diff_2.push(s)
-								        		{% endif %}
-										    });
-
-
-								            {% if name.kv_one_id != 'null' %}
-									            var value = parseInt($('.pba').attr('aria-valuenow'));
-												value = value + 1;
-												var percent = Math.ceil(value/{{ display_list_length }} * 100);
-												$('.pba').css('width', percent+'%').attr('aria-valuenow', value);
-
-												while (aliases_diff_1.length > 0) {
-													var s_1 = aliases_diff_1.pop()
-													$(".alias-{{ name.kv_one_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_1+"</p>")
-												}
-												while (aliases_diff_2.length > 0) {
-													var s_2 = aliases_diff_2.pop()
-													$(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_2+"</p>")
-												}
-											{% endif %}
-
-
-								        }
-						           	})
-
-
-					    		{% endif %}
-
+								{% endif %}
 
 							})
 						</script>
