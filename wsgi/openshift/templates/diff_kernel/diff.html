@@ -96,14 +96,14 @@
 
 
 
-
 						<script>
 							$(document).ready(function() {
-								var alias_diff_kv_one = []
-								var alias_diff_kv_two = []
+								aliases_diff_1 = []
+								aliases_diff_2 = []
 
 
-								{% if name.kv_one_id != 'null' %}			         
+								{% if name.kv_one_id != 'null' %}
+									
 								    $.ajax({
 								        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_one_id }}",
 								        dataType: "text",
@@ -155,8 +155,13 @@
 								        			s += ":"
 								        			s += ("00000" + value.subdevice).slice(-4);
 								        		}
-								        		alias_diff_kv_one.push(s)
-												// $(".alias-{{ name.kv_one_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s+"</p>")
+
+
+								        		{% if name.kv_two_id != 'null' %}
+													aliases_diff_1.push(s)
+												{% endif %}
+
+
 										    });
 
 								            var value = parseInt($('.pba').attr('aria-valuenow'));
@@ -164,7 +169,7 @@
 											var percent = Math.ceil(value/{{ display_list_length }} * 100);
 											$('.pba').css('width', percent+'%').attr('aria-valuenow', value);
 
-
+											
 								        }
 						           	})
 
@@ -172,7 +177,9 @@
 							    {% endif %}
 
 
-							    {% if name.kv_two_id != 'null' %}			         
+							    {% if name.kv_two_id != 'null' %}
+							    	
+
 								    $.ajax({
 								        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_two_id }}",
 								        dataType: "text",
@@ -229,30 +236,34 @@
 								        			s += ":"
 								        			s += ("00000" + value.subdevice).slice(-4);
 								        		}
-								        		alias_diff_kv_two.push(s)
-												// $(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s+"</p>")
+								        		{% if name.kv_one_id != 'null' %}
+								        			aliases_diff_2.push(s)
+								        		{% endif %}
 										    });
 
 
-
-								            {% if name.kv_one_id == 'null' %}
+								            {% if name.kv_one_id != 'null' %}
 									            var value = parseInt($('.pba').attr('aria-valuenow'));
 												value = value + 1;
 												var percent = Math.ceil(value/{{ display_list_length }} * 100);
 												$('.pba').css('width', percent+'%').attr('aria-valuenow', value);
+
+												while (aliases_diff_1.length > 0) {
+													var s_1 = aliases_diff_1.pop()
+													$(".alias-{{ name.kv_one_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_1+"</p>")
+												}
+												while (aliases_diff_2.length > 0) {
+													var s_2 = aliases_diff_2.pop()
+													$(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_2+"</p>")
+												}
 											{% endif %}
 
 
 								        }
 						           	})
 
-								    
+
 					    		{% endif %}
-
-
-					    		$.each(alias_diff_kv_one, function (index, value) {
-					    			$(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+value+"</p>")
-					    		})
 
 
 							})
