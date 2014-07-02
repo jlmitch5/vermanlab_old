@@ -8,7 +8,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
+from schema_kernel.serializers import KernelVersionSerializer
 
+# get all the kernel version in the system
+class GetKernelVersions(APIView):
+    def get(self, request, format=None):
+        kvs = KernelVersion.objects.all()
+        serializer = KernelVersionSerializer(kvs, many=True)
+        return Response(serializer.data)
+
+# get all diff information for the differences in modules/aliases for two kernel versions
 class Diff(APIView):
     # remove aliases for analogous modules
     def get_and_remove_similar_aliases(self, mod_id_1, mod_id_2):

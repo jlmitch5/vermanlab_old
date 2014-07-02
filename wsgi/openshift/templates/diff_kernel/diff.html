@@ -17,28 +17,8 @@
 
 	<body style="margin-left: 20px; margin-right: 20px;">
 
-
-		<!-- PROGRESS BARS -->
-		{% if display_list %}
-			<div style="margin-top: 20px;">
-			</div>
-			<div class="progress-modules progress progress-striped active" style="width: calc(50% - 10px); float: left;">
-			  <div class="progress-bar progress-bar-success pbm" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ display_list_length }}" style="width: 0%;">
-
-			  </div>
-			</div>
-<!-- 			<div class="progress-modules progress progress-striped active" style="width: calc(50% - 10px); float: right;">
-			  <div class="progress-bar progress-bar-default pba" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ display_list_length }}" style="width: 0%;">
-			  </div>
-			</div> -->
-		{% endif %}
-  </div>
-</div>
-
-
-
 		<!-- KERNEL SELECTING FORM -->
-		<div style= "padding-top: 20px; padding-bottom: 20px;">
+		<div id="kernel_selection_form" style="padding-top: 20px; padding-bottom: 20px;">
 			<form method="post">{% csrf_token %}
 				<div style="width: 100px; display: relative; float:left;">
 					<button type="submit" class="btn btn-primary">
@@ -61,230 +41,66 @@
 			</form>
 		</div>
 
-		<!-- DIFF DISPLAY FORM -->
-		<div style="margin-top: 20px;">
-			{% if display_list and api_url_root %}
-				{% for name in display_list %}
-						<span style="margin-left: 100px; width: calc(50% - 50px); display: relative; float: left; border-top: 1px solid #ccc; padding-top: 5px">
-							{% if name.kv_one_id != 'null' %}
-								<p style="font-weight: bold" class="{{ name.kv_one_id }}">
-									to_be_added
-								</p>
-								<div class="alias-{{ name.kv_one_id }}" style="border-top: 1px dashed #ccc">
-									<p style="padding-top: 8px">add_aliases_here</p>
-							    </div>
-							{% else %}
-								<p style="font-weight: bold; color: #cc0000;">null</p>
-							{% endif %}
-						</span>
-						<span style="width: calc(50% - 50px); display: relative; float: right; border-top: 1px solid #ccc; padding-top: 5px;">
-							{% if name.kv_two_id != 'null' %}
-								<p style="font-weight: bold" class="{{ name.kv_two_id }}">
-									to_be_added
-								</p>
-							    <div class="alias-{{ name.kv_two_id }}" style="border-top: 1px dashed #ccc">
-									<p style="padding-top: 8px">add_aliases_here</p>
-							    </div>
-							{% else %}
-								<p style="font-weight: bold; color: #cc0000;">null</p>
-
-							{% endif %}
-						</span>
-						<div style="width: calc(100% - 100px); display: relative; float: right;">
-						</div>
-
-
-
-
-						<script>
-							$(document).ready(function() {
-
-
-								{% if name.kv_one_id != 'null' %}
-									
-								    $.ajax({
-								        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_one_id }}",
-								        dataType: "text",
-								        success: function(data) {
-
-
-								            var json = $.parseJSON(data)
-								            var s = ""
-								            s += json.name
-								            if (json.version != 'NULL') {
-								            	s += ', '
-								            	s += json.version
-								            }
-								            if (json.srcversion != 'NULL') {
-								            	s += ', '
-								            	s += json.srcversion
-								            }
-								            $(".{{ name.kv_one_id }}").text(s)
-
-
-								            var value = parseInt($('.pbm').attr('aria-valuenow'));
-											value = value + 1;
-											var percent = Math.ceil(value/{{ display_list_length }} * 100);
-											$('.pbm').css('width', percent+'%').attr('aria-valuenow', value);
-								        }
-								    })
+		<div id="kernel_diff_output">
+			{% if kernel_diff_info %}
+				{% for row in kernel_diff_info %}
+					<div class="kernel_diff_row" style="width:100%;">
+						{% if row.kernel_one_module != "null" %}
+							<div class="kernel_one_column" style="width:calc(50% - 50px); margin-left: 100px; float: left;">
+								<div class="kernel_column_header {{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }}" style="font-weight: bold; width: 100%; text-align: center;
+								{% if row.kernel_one_module.aliases %}
+									background-color: #cc0000; color: #fff;
+								{% else %}
+									background-color: #aaa; color: #fff;
 								{% endif %}
-
-								{% if name.kv_two_id != 'null' %}
-							    	
-
-								    $.ajax({
-								        url: "{{ api_url_root }}/api/mod_pretty/{{ name.kv_two_id }}",
-								        dataType: "text",
-								        success: function(data) {
-
-
-								            var json = $.parseJSON(data)
-								            var s = ""
-								            s += json.name
-								            if (json.version != 'NULL') {
-								            	s += ', '
-								            	s += json.version
-								            }
-								            if (json.srcversion != 'NULL') {
-								            	s += ', '
-								            	s += json.srcversion
-								            }
-								            $(".{{ name.kv_two_id }}").text(s)
-
-
-								            {% if name.kv_one_id == 'null' %}
-								            	var value = parseInt($('.pbm').attr('aria-valuenow'));
-												value = value + 1;
-												var percent = Math.ceil(value/{{ display_list_length }} * 100);
-												$('.pbm').css('width', percent+'%').attr('aria-valuenow', value);
-								            {% endif %}
-								        }
-								    })
-
+								">
+									<p style="margin-bottom: 0px;">
+										{{ row.kernel_one_module.module_name}}
+										{% if row.kernel_one_module.version != 'NULL' %}
+											 {{ row.kernel_one_module.version }}
+										{% endif %}
+										{% if row.kernel_one_module.srcversion != 'NULL' %}
+											 {{ row.kernel_one_module.srcversion }}
+										{% endif %}
+									</p>
+								</div>
+								{% if row.kernel_one_module.aliases %}
+									<div class="kernel_column_header aliases-{{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }}" style="width: 100%;">
+									{% for alias in row.kernel_one_module.aliases %}
+										<p style="margin-bottom: 0px;" class="alias {{ alias }} {{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }}">{{ alias }}</p>
+									{% endfor %}
+									</div>
 								{% endif %}
-
-
-								{% if name.kv_one_id != 'null' and name.kv_two_id != 'null' %}
-
-									KernelOne = {
-										getArray1: function(k1_callback) {
-											var kernel_one_aliases = new Array;
-										    kernel_one_aliases.ajax({
-								            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_one_id }}",
-										        dataType: "text",
-										        success: function(data) {
-										        	$(".alias-{{ name.kv_one_id }}").text("")
-										        	var json = $.parseJSON(data)
-										        	$.each(json, function (index, value) {
-										        		var s=""
-										        		if (value.vendor != "null") {
-										        			s += ("00000" + value.vendor).slice(-4);
-										        		}
-										        		if (value.device != "null") {
-										        			s += ":"
-										        			s += ("00000" + value.device).slice(-4);
-										        		}
-										        		if (value.subvendor != "null") {
-										        			s += ":"
-										        			s += ("00000" + value.subvendor).slice(-4);
-										        		}
-										        		if (value.subdevice != "null") {
-										        			s += ":"
-										        			s += ("00000" + value.subdevice).slice(-4);
-										        		}
-										        		kernel_one_aliases.push(s)  		
-												    })
-										    		k1_callback.call(this,kernel_one_aliases)
-
-										   			// var value = parseInt($('.pba').attr('aria-valuenow'));
-													// value = value + 1;
-													// var percent = Math.ceil(value/{{ display_list_length }} * 100);
-													// $('.pba').css('width', percent+'%').attr('aria-valuenow', value);
-
-												}
-								           	})
-								        }
-						           	}
-
-
-									KernelTwo = {
-										getArray2: function(k2_callback) {
-											var kernel_two_aliases = new Array;
-											$.ajax({
-								            	url: "{{ api_url_root }}/api/alias_by_mod/{{ name.kv_two_id }}",
-										        dataType: "text",
-										        success: function(data) {
-										        	aliases_diff_2 = []
-										            $(".alias-{{ name.kv_two_id }}").text("")
-										        	var json = $.parseJSON(data)
-										        	$.each(json, function (index, value) {
-										        		var s=""
-										        		if (value.vendor != "null") {
-										        			s += ("00000" + value.vendor).slice(-4);
-										        		}
-										        		if (value.device != "null") {
-										        			s += ":"
-										        			s += ("00000" + value.device).slice(-4);
-										        		}
-										        		if (value.subvendor != "null") {
-										        			s += ":"
-										        			s += ("00000" + value.subvendor).slice(-4);
-										        		}
-										        		if (value.subdevice != "null") {
-										        			s += ":"
-										        			s += ("00000" + value.subdevice).slice(-4);
-										        		}
-
-										        		kernel_two_aliases.push(s)
-
-												    });
-												    k2_callback.call(this,kernel_two_aliases)
-										        }
-								           	})
-										}
-									}
-
-									$.when (
-										KernelOne.getArray1(function(a) {
-										    return a;
-										}),
-										KernelTwo.getArray2(function(b) {
-											return b;
-										})
-
-									).done(function(a, b) {
-
-									
-										// var value = parseInt($('.pba').attr('aria-valuenow'));
-										// value = value + 1;
-										// var percent = Math.ceil(value/{{ display_list_length }} * 100);
-										// $('.pba').css('width', percent+'%').attr('aria-valuenow', value);
-
-										while (a.length > 0) {
-											var s_1 = a.pop()
-											$(".alias-{{ name.kv_one_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_1+"</p>")
-										}
-										while (b.length > 0) {
-											var s_2 = b.pop()
-											$(".alias-{{ name.kv_two_id }}").append("<p style=\"border-top: 1px dashed #ccc; padding-top: 5px;\">"+s_2+"</p>")
-										}
-
-									});
-
+							</div>
+						{% endif %}
+						{% if row.kernel_two_module != "null" %}
+							<div class="kernel_two_column" style="width:calc(50% - 50px); float: right;">
+								<div class="kernel_column_header {{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }}" style="font-weight: bold; width: 100%;">
+									<p style="margin-bottom: 0px;">
+										{{ row.kernel_two_module.module_name}}
+										{% if row.kernel_two_module.version != 'NULL' %}
+											 {{ row.kernel_two_module.version }}
+										{% endif %}
+										{% if row.kernel_two_module.srcversion != 'NULL' %}
+											 {{ row.kernel_two_module.srcversion }}
+										{% endif %}
+									</p>
+								</div>
+								{% if row.kernel_two_module.aliases %}
+									<div class="kernel_column_header aliases-{{ row.kernel_two_module.module_name}}{{ row.kernel_two_module.version }}{{ row.kernel_two_module.srcversion }}" style="width: 100%;">
+									{% for alias in row.kernel_two_module.aliases %}
+										<p style="margin-bottom: 0px;" class="alias {{ alias }} {{ row.kernel_two_module.module_name}}{{ row.kernel_two_module.version }}{{ row.kernel_two_module.srcversion }}">{{ alias }}</p>
+									{% endfor %}
+									</div>
 								{% endif %}
-
-
-							})
-						</script>
-
-
+							</div>
+						{% endif %}
+					</div>
+					<div class="row_spacer" style="width: calc(100% - 100px); display: relative; float: right;">
+					</div>
 				{% endfor %}
 			{% endif %}
 		</div>
-
-
-
 
 	</body>
 </html>
