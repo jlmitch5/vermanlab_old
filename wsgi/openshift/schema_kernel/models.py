@@ -6,16 +6,10 @@ import datetime
 # Kernel Version is the version of the kernel that contains specific modules
 class KernelVersion(models.Model):
     name = models.CharField(max_length=100, unique=True)
-#    dateAdded = models.DateTimeField('date kernel version collected', default=datetime.datetime.now)
 
     # returns the KernelVersion name
     def __unicode__(self):
-        return self.name
-
-    # TODO: add delete functionality via checking exclusivity of module relations used for table-level KernelVersion functions
-
-# TODO: Add KernelVersionManager (used to see if the KernelVersion has exclusively related modules)
-# class KernelVersionManager(models.Manager):
+        return unicode(self.name)
 
 # Modules are referenced by the Kernel, and contain Aliases with which to relate their hardware support
 class PCIModule(models.Model):
@@ -31,8 +25,9 @@ class PCIModule(models.Model):
 
     # returns the Module name version and source version
     def __unicode__(self):
-        return self.name+" "+self.version+" "+self.srcversion
+        return unicode(self.name+"- vsn: "+self.version+", src: "+self.srcversion)
 
+# TODO: Change to just one field
 # Aliases are referenced by specific modules, and relate hardware devices by vendor, device, subvendor, subdevice
 class PCIAliases(models.Model):
     module = models.ForeignKey(PCIModule)
@@ -47,6 +42,4 @@ class PCIAliases(models.Model):
 
     # returns the alias for the device
     def __unicode__(self):
-        return self.module.name+": "+self.vendor+":"+self.device+":"+self.subvendor+":"+self.subdevice
-
-# TODO: Add a model that relates Module, Kernel and Alias for capability tagging
+        return unicode(self.vendor+":"+self.device+":"+self.subvendor+":"+self.subdevice)

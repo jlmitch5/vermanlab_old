@@ -1,0 +1,13 @@
+{
+    "build_systems":
+    [
+        {
+            "name":"Virtualenv 2.7",
+            "cmd":
+            [
+                "${project_path}/fedora/bin/python2.7",
+                "$file"
+            ]
+        },
+    ]
+}

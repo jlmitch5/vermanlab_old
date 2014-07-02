@@ -1,37 +1,36 @@
 from rest_framework import serializers
-from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
 
+from schema_kernel.models import KernelVersion, PCIModule
+
+# the kernel version
 class KernelVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = KernelVersion
         fields = ('name',)
 
-class KernelVersionIDSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = KernelVersion
-		fields = ('id',)
-
-class PCIModuleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PCIModule
-        fields = ('id', 'name', 'kernelVersionModuleConnector')
-
-class PCIModuleIDSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PCIModule
-        fields = ('id',)
-
-class PCIModuleInfoSerializer(serializers.ModelSerializer):
+# the module
+class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = PCIModule
         fields = ('name', 'version', 'srcversion',)
 
-class AliasDiffSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PCIAliases
-        fields = ('module', 'vendor', 'device', 'subvendor', 'subdevice')
+# TODO: change schema of serializer to just one field
+# the serializer for the aliases of a module
+class AliasSerializer(serializers.Serializer):
+    serializers.CharField(max_length=19)
 
-class AliasByModSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PCIAliases
-        fields = ('vendor', 'device', 'subvendor', 'subdevice')
+# START DIFF SERIALIZERS
+# the serializer for a module in the diff tree
+class DiffModuleSerializer(serializers.Serializer):
+    kernelVersion = KernelVersionSerializer()
+    module = ModuleSerializer()
+    aliases = AliasSerializer(many=True, required=False)
+
+# the serializer for a pair of KernelVersionModules
+class ModulePairSerializer(serializers.Serializer):
+    kernelOneModule = DiffModuleSerializer(required=False)
+    kernelTwoModule = DiffModuleSerializer(required=False)
+
+# the serializer for all the pairs of modules in two kernels
+class ModulePairListSerializer(serializers.Serializer):
+    ModulePairSerializer(many=True)
