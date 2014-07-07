@@ -10,7 +10,7 @@ from upload_kernel.forms import KernelTarballForm
 import os, gzip, settings, pdb, subprocess
 from schema_kernel.models import KernelVersion, PCIModule, PCIAliases
 
-def list(request):
+def upload(request):
 
     # Load documents for the list page
     kernel_tarballs = Kernel_Tarball.objects.all()
@@ -30,13 +30,13 @@ def list(request):
             unzip_file(new_kernel_tarball)
 
             # Redirect to the document list after POST
-            return HttpResponseRedirect(reverse('upload_kernel.views.list'))
+            return HttpResponseRedirect(reverse('upload_kernel.views.upload'))
     else:
         form = KernelTarballForm() # A empty, unbound form
 
     # Render list page with the documents and the form
     return render_to_response(
-        'upload_kernel/list.html',
+        'upload_kernel/upload.html',
         {'shell_scripts': shell_scripts, 'kernel_tarballs': kernel_tarballs, 'form': form},
         context_instance=RequestContext(request)
     )

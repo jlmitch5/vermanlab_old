@@ -19,6 +19,7 @@ class GetKernelVersions(APIView):
 
 # get all diff information for the differences in modules/aliases for two kernel versions
 class Diff(APIView):
+
     # remove aliases for analogous modules
     def get_and_remove_similar_aliases(self, mod_id_1, mod_id_2):
         pretty_aliases_kv_1 = []
@@ -96,6 +97,12 @@ class Diff(APIView):
         return KernelVersion.objects.get(name=name)
 
     def get(self, request, name1, name2, format=None):
+        diff_vsn_val = 0
+        old_mod_val = 0
+        old_vsn_val = 0
+        new_mod_val = 0
+        new_vsn_val = 0
+
         # instantiate the mod pairslist
         mod_pairs_list = []
 
@@ -145,10 +152,11 @@ class Diff(APIView):
                             "srcversion": mod.srcversion,
                             "aliases": alias_strings_serialized
                         },
-                        "kernel_two_module": None,
-                        "different_aliases": "yes"
+                        "kernel_two_module": None
                     }
                 )
+
+                old_mod_val += 1
             elif mod_name in kv_2_mod_names:
                 alias_strings_serialized = []
 
@@ -174,10 +182,11 @@ class Diff(APIView):
                             "version": mod.version,
                             "srcversion": mod.srcversion,
                             "aliases": alias_strings_serialized
-                        },
-                        "different_aliases": "yes"
+                        }
                     }
                 )
+
+                new_mod_val += 1
             else:
                 alias_strings_1 = []
                 alias_strings_2 = []
@@ -204,9 +213,12 @@ class Diff(APIView):
                 for alias in mod_2_aliases:
                     alias_strings_2.append(self.chop_aliases(alias))
                 if not mod_1_aliases and not mod_2_aliases:
-                    no_different_aliases = "yes"
+                    diff_vsn_val += 1
                 else:
-                    no_different_aliases = "no"
+                    if mod_1_aliases:
+                        old_vsn_val += 1
+                    if mod_2_aliases:
+                        new_vsn_val += 1
 
                 mod_pairs_list.append( 
                     {
@@ -224,11 +236,19 @@ class Diff(APIView):
                             "version": mod_2.version,
                             "srcversion": mod_2.srcversion,
                             "aliases": alias_strings_2
-                        },
-                        "different_aliases": no_different_aliases
+                        }
                     }
                 )
 
-        return HttpResponse(json.dumps(mod_pairs_list), content_type="application/json")
+        mod_pairs_list_with_values = {
+            "diff_vsn_val": diff_vsn_val,
+            "old_vsn_val": old_vsn_val,
+            "old_mod_val": old_mod_val,
+            "new_vsn_val": new_vsn_val,
+            "new_mod_val": new_mod_val,
+            "mod_pairs_list": mod_pairs_list
+        }
+
+        return HttpResponse(json.dumps(mod_pairs_list_with_values), content_type="application/json")
 
 

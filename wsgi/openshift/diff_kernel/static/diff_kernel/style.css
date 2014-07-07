@@ -1,0 +1,8 @@
+.grey {
+	background-color: #ccc!important;
+	color: #383838 !important;
+}
+
+button.grey span.badge {
+	color: #383838 !important;
+}

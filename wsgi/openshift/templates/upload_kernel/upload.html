@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Minimal Django File Upload Example</title>	
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>VML|Upload</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+	</head>
+
+
+	<body style="margin-left: 20px; margin-right: 20px;">
+		<h2>
+			Upload your machine's installed kernel versions to Verman Lab:
+		</h2>
+		<br />
+		<div class="jumbotron">
+			<h3>
+				<span style="font-weight: bold">Step 1:</span> Download this <a href="{{ shell_script.docfile.url }}">script</a>
+			</h3>
+			<h3>
+				<span style="font-weight: bold">Step 2:</span> Upload the file created by the script below:
+			</h3>
+			<form action="{% url "upload" %}" method="post" enctype="multipart/form-data">
+	                {% csrf_token %}
+	                <p>{{ form.non_field_errors }}</p>
+	                <h3>
+	                	<span class="label label-primary">
+	                		{{ form.docfile.label_tag }} {{ form.docfile.help_text }}
+	                	</span>
+	                </h3>
+	                <p>
+	                        {{ form.docfile.errors }}
+	                        {{ form.docfile }}
+	                </p>
+	                <p><input type="submit" value="Upload" /></p>
+	        </form>
+<!-- 			<div class="fileinput fileinput-new input-group" data-provides="fileinput">
+				<div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+				<span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Upload .tar.gz file</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+				<a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+			</div> -->
+		</div>
+
+<!-- 		{% if shell_scripts %}
+			{% for shell_script in shell_scripts %}
+				{% if shell_script.docfile.name == "scripts/vmlModInfoTreeCreation.sh" %}
+		<p>Start by downloading the<a href="{{ shell_script.docfile.url }}">VML MOD INFO TREE CREATION SCRIPT</a> to analyze your machine's installed kernels (and their modules/drivers)</p>
+				{% else %}
+		<p>ERROR! The VML MOD INFO TREE CREATION SCRIPT CANNOT BE FOUND</p>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+		<p>(So I guess not shell scripts)</p>
+		{% endif %}
+		<br />
+		<br /> -->
+
+		<!-- Upload form. Note enctype attribute! -->
+<!-- 		<div class="jumbotron">
+        </div>
+		<br />
+		<br /> -->
+
+
+		<h3> The following machines have added their kernels to VML: </h3>	
+		<ul>
+		{% if kernel_tarballs %}
+			{% for kernel_tarball in kernel_tarballs %}
+			<li>
+				<h5><a href="{{ kernel_tarball.docfile.url }}">
+				{{ kernel_tarball.pretty_name }}
+				</a></h5>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+			<p>No tarballs uploaded, you're the first!</p>
+		{% endif %}
+	</body>
+</html> 

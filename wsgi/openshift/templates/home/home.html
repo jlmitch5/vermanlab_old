@@ -1,8 +1,39 @@
-<b>
-Welcome to vml:
-<b>
-<br />
-<ul>
-	<li><a href="/admin">admin</a></li>
-	<li><a href="/upload/list">upload</a></li>
-</ul>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Minimal Django File Upload Example</title>	
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>VML|Upload</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.css">
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
+	</head>
+
+
+	<body style="margin-left: 20px; margin-right: 20px;">
+		<h1>
+			Welcome to Verman Lab.  The following modules are under development:
+		</h1>
+		<ul>
+			<li><h3><a href="/admin">admin</a></h3></li>
+			<li><h3><a href="/upload">upload</a></h3></li>
+			<li><h3><a href="/diff/">diff</a></h3></li>
+		</ul>
+		<br />
+		<br />
+		<h3>
+			API Calls created:
+		</h3>
+		<ul>
+			<li><a href="/api/get_kernel_versions">Return uploaded kernel versions</a></li>
+			<li><a href="/api/diff">Retrun all the different module versions/aliases for two kernel versions</a></li>
+		</ul>
+	</body>
+</html>
