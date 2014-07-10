@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^api/', include('schema_kernel.urls')),
     url(r'^upload/', include('upload_kernel.urls')),
     url(r'^diff/', include('diff_kernel.urls')),
+    url(r'^pci_ids/', include('pci_ids.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

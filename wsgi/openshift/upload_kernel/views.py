@@ -86,9 +86,10 @@ def unzip_file(kernel_object):
             except subprocess.CalledProcessError:
                 pass
             m, created_m = PCIModule.objects.get_or_create(name=module_name, version=version_name, srcversion=srcversion_name)
-            output = subprocess.check_output( ['cat', '%s' % (alias_path)] )
-            m.save
             m.kernelVersionModuleConnector.add(kv)
+            m.save
+
+            output = subprocess.check_output( ['cat', '%s' % (alias_path)] )
             
             alias_list = (output.splitlines())
             for inst_alias in alias_list:
@@ -118,5 +119,6 @@ def unzip_file(kernel_object):
                 except:
                     pass
 
-                a, created_a = PCIAliases.objects.get_or_create(module_id=m.id, vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
+                a, created_a = PCIAliases.objects.get_or_create(vendor=vendor, device=device, subvendor=subvendor, subdevice=subdevice)
+                a.module.add(m)
                 a.save

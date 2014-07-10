@@ -45,84 +45,35 @@
 			</form>
 		</div>
 
-		{% if kernel_diff_info %}
-			<!-- Buttons that toggle which modules/aliases to display -->
-			<button type="button" class="btn btn-default" style="width: 100px; margin-right: 10px; float: left; height: 37.59px;">
-				Help
-			</button>
+		{% if kdi %}
 
+			<button type="button" class="btn btn-default" style="width: 100px; margin-right: 10px; float: left; height: 37.59px;">Help</button>
+
+			<!-- Buttons that toggle which modules/aliases to display -->
 			<div class="btn-group" style="width: calc(100% - 110px); margin-bottom: 10px; padding-right: 10px;">
 
-			  <button type="button" class="btn btn-primary btn-old-mod" style="width: 20%;">
-			  	old mod - devices
-			  	<span class="badge pull-right" style="padding: 6px 8px;">
-			  		{{ kernel_diff_info.old_mod_val }}
-			  	</span>
-			  </button>
+			  <button type="button" class="btn btn-primary btn-old-mod" style="width: 20%;">old mod - devices<span class="badge pull-right" style="padding: 6px 8px;">{{ kdi.kv1m }}</span></button>
 
-			  <button type="button" class="btn btn-primary btn-old-vsn" style="width: 20%; background-color: #4FA293;">
-			  	old vsn - devices
-			  	<span class="badge pull-right" style="padding: 6px 8px;color: #4FA293;">
-			  		{{ kernel_diff_info.old_vsn_val }}
-			  	</span>
-			  </button>
+			  <button type="button" class="btn btn-primary btn-old-vsn" style="width: 20%; background-color: #4FA293;">old vsn - devices<span class="badge pull-right" style="padding: 6px 8px;color: #4FA293;">{{ kdi.kv1v }}</span></button>
 
-			  <button type="button" class="btn btn-success btn-diff-vsn" style="width: 20%; border-left-color: #357ebd; border-top-color: #357ebd; border-bottom-color: #357ebd">
-				  diff vsn - mods
-				  <span class="badge pull-right" style="padding: 6px 8px;">
-				  	{{ kernel_diff_info.diff_vsn_val }}
-				  </span>
-			  </button>
+			  <button type="button" class="btn btn-success btn-diff-vsn" style="width: 20%; border-left-color: #357ebd; border-top-color: #357ebd; border-bottom-color: #357ebd">diff vsn - mods<span class="badge pull-right" style="padding: 6px 8px;">{{ kdi.dv }}</span></button>
 
-			  <button type="button" class="btn btn-primary btn-new-vsn" style="width: 20%; background-color: #99cc66;">
-				  new vsn - devices
-				  <span class="badge pull-right" style="padding: 6px 8px;color: #99cc66;">
-				  	{{ kernel_diff_info.new_vsn_val }}
-				  </span>
-			  </button>
+			  <button type="button" class="btn btn-primary btn-new-vsn" style="width: 20%; background-color: #99cc66;">new vsn - devices<span class="badge pull-right" style="padding: 6px 8px;color: #99cc66;">{{ kdi.kv2v }}</span></button>
 
-			  <button type="button" class="btn btn-primary btn-new-mod" style="width: 20%;background-color: #f0ad4e">
-				  new mod - devices
-				  <span class="badge pull-right" style="padding: 6px 8px;color: #f0ad4e;">
-				  	{{ kernel_diff_info.new_mod_val }}
-				  </span>
-			  </button>
-
+			  <button type="button" class="btn btn-primary btn-new-mod" style="width: 20%;background-color: #f0ad4e">new mod - devices<span class="badge pull-right" style="padding: 6px 8px;color: #f0ad4e;">{{ kdi.kv2m }}</span></button>
 			</div>
 
 			<!-- Output of the Kernel Diff -->
 			<div id="kernel_diff_output_rows">
-
-
-				{% for row in kernel_diff_info.mod_pairs_list %}
-
+				{% for mod in kdi.mods %}
 					<!-- Each row (contains modules and aliases) -->
-					<div class="kernel_diff_row btn-group btn-group-justified
+					<div id="module-button-group-{% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %}"class="module-button-group {% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %}{% if mod.k1m.a %}{% if not mod.k2m %} old-mod{% else %} old-vsn{% endif %}{% endif %}{% if mod.k2m.a %}{% if not mod.k1m %} new-mod{% else %} new-vsn{% endif %}{% endif %}{% if not mod.k1m.a and not mod.k2m.a %} diff-mod{% endif %} btn-group btn-group-justified" style="width: calc(100% - 15px);margin-bottom: 10px;">
+						{% if mod.k1m %}
 
-						{% if row.kernel_one_module.aliases and not row.kernel_two_module %}
-							old-mod
-						{% endif %}
-
-						{% if row.kernel_two_module.aliases and not row.kernel_one_module %}
-							new-mod
-						{% endif %}
-
-						{% if not row.kernel_one_module.aliases and not row.kernel_two_module.aliases %}
-							diff-mod
-						{% endif %}
-
-					" style="width: calc(100% - 15px);margin-bottom: 10px;">
+							<div class="btn-group" style="width:50%; float: left;">
 
 
-						{% if row.kernel_one_module %}
-
-
-							<div class="kernel_one_column btn-group" style="width:50%; float: left;">
-
-
-								<button class="btn btn-default kernel_column_header {{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }} {% if row.kernel_one_module.aliases or row.kernel_two_module.aliases %}btn-lg{% if row.kernel_one_module.aliases %} btn-danger{% endif %}{% endif %}" style="width: 100%; text-align: center;">
-									{{ row.kernel_one_module.module_name}}{% if row.kernel_one_module.version != 'NULL' %} {{ row.kernel_one_module.version }}{% endif %}{% if row.kernel_one_module.srcversion != 'NULL' %} {{ row.kernel_one_module.srcversion }}{% endif %}
-								</button>		
+								<button class="module-button {% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %} btn btn-default {% if mod.k1m.a or mod.k2m.a %}btn-lg {% if mod.k1m.a %}btn-danger{% endif %}{% endif %}" style="width: 100%; text-align: center;">{{ mod.k1m.m}} {{ mod.k1m.v }} {{ mod.k1m.srcv }}</button>		
 
 
 							</div>
@@ -130,29 +81,12 @@
 
 						{% endif %}
 
+						{% if mod.k2m %}
 
-						{% if row.kernel_two_module %}
-
-
-							<div class="kernel_two_column btn-group" style="width:50%; float: right;">
+							<div class="btn-group" style="width:50%; float: right;">
 
 
-								<button class="btn btn-default kernel_column_header {{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }} 
-								{% if row.kernel_one_module.aliases or row.kernel_two_module.aliases %}
-									btn-lg
-									{% if row.kernel_two_module.aliases %}
-										btn-danger
-									{% endif %}
-								{% endif %}
-								" style="width: 100%; text-align: center;">
-									{{ row.kernel_two_module.module_name}}
-									{% if row.kernel_two_module.version != 'NULL' %}
-										 {{ row.kernel_two_module.version }}
-									{% endif %}
-									{% if row.kernel_two_module.srcversion != 'NULL' %}
-										 {{ row.kernel_two_module.srcversion }}
-									{% endif %}
-								</button>
+								<button class="btn-{% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %} btn btn-default {% if mod.k2m.a or mod.k1m.a %}btn-lg {% if mod.k2m.a %}btn-danger{% endif %}{% endif %}" style="width: 100%; text-align: center;">{{ mod.k2m.m}} {{ mod.k2m.v }} {{ mod.k2m.srcv }}</button>		
 
 
 							</div>
@@ -160,38 +94,36 @@
 
 						{% endif %}
 					</div>
+
+
 					<div class="row_spacer" style="width: 100%; display: relative; float: right;">
 					</div>
-						{% if row.kernel_one_module.aliases %}
-							<div class="kernel_column_header aliases-{{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }}" style="width:calc(50% - 7px); margin-left: 0px; padding-left: 0px; float: left;">
-								<ul class="list-group
-									{% if row.kernel_two_module %}
-										old-vsn
-									{% else %}
-										old-mod
-									{% endif %}
-								" style="width: calc(100% - 5px); margin-bottom: 10px; float: left;">
-							{% for alias in row.kernel_one_module.aliases %}
-								<li class="list-group-item list-group-item-danger" style="margin-bottom: 0px;" class="alias {{ alias }} {{ row.kernel_one_module.module_name}}{{ row.kernel_one_module.version }}{{ row.kernel_one_module.srcversion }}">{{ alias }}</li>
+
+					{% if mod.k1m.a or mod.k2m.a %}
+						<ul class="{% if mod.k2m.a and not mod.k1m %}new-mod {% endif %}{% if mod.k1m.a and not mod.k2m %}old-mod {% endif %}device_bucket {% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %}" style="width: calc(100% - 15px); margin-bottom: 10px; float: left; padding-left: 0px;">
+								<li class="list-group-item list-group-item-success" style="margin-bottom: 0px;" >Hover over the aliases to get the readable device name</li>
+						</ul>
+					{% endif %}
+
+					{% if mod.k1m.a %}
+						<div class="old-aliases-for-module {{ mod.k1m.m }} aliases-{{ mod.k1m.m }}{{ mod.k1m.v }}{{ mod.k1m.srcv }}" style="width:calc(50% - 7px); margin-left: 0px; padding-left: 0px; float: left;">
+							<ul class="list-group{% if mod.k2m %} old-vsn{% else %} old-mod{% endif %}" style="width: calc(100% - 5px); margin-bottom: 10px; float: left; padding-left: 0px;">
+							{% for alias in mod.k1m.a %}
+								<li class="list-group-item list-group-item-danger" style="width: 100%; margin-bottom: 0px;" class="alias {{ alias }}">{{ alias.a.r }}</li>
 							{% endfor %}
-								</ul>
-							</div>
-						{% endif %}
-						{% if row.kernel_two_module.aliases %}
-							<div class="kernel_column_header aliases-{{ row.kernel_two_module.module_name}}{{ row.kernel_two_module.version }}{{ row.kernel_two_module.srcversion }}" style="width:calc(50% - 8px); float: right; margin-right: 10px;">
-								<ul class="list-group
-									{% if row.kernel_one_module %}
-										new-vsn
-									{% else %}
-										new-mod
-									{% endif %}
-								" style="width: calc(100% - 5px); margin-bottom: 10px; float: left;">
-							{% for alias in row.kernel_two_module.aliases %}
-								<li class="list-group-item list-group-item-danger" style="margin-bottom: 0px;" class="alias {{ alias }} {{ row.kernel_two_module.module_name}}{{ row.kernel_two_module.version }}{{ row.kernel_two_module.srcversion }}">{{ alias }}</li>
+							</ul>
+						</div>
+					{% endif %}
+
+					{% if mod.k2m.a %}
+						<div class="new-aliases-for-module {{ mod.k2m.m }} aliases-{{ mod.k2m.m }}{{ mod.k2m.v }}{{ mod.k2m.srcv }}" style="width:calc(50% - 8px); float: right; margin-right: 10px;">
+							<ul class="list-group{% if mod.k1m %} new-vsn {% else %} new-mod{% endif %}" style="width: calc(100% - 5px); margin-bottom: 10px; float: left; padding-left: 0px;">
+							{% for alias in mod.k2m.a %}
+								<li class="list-group-item list-group-item-danger" style="margin-bottom: 0px;" class="alias {{ alias }}">{{ alias.a.r }}</li>
 							{% endfor %}
-								</ul>
-							</div>
-						{% endif %}
+							</ul>
+						</div>
+					{% endif %}
 
 					<!-- Just keeps the row justified after all output is done -->
 					<div class="row_spacer" style="width: calc(100% - 110px); display: relative; float: right;">
@@ -202,28 +134,59 @@
 
 				<script>
 					$(document).ready(function() {
+
+						value_for_old_vsn = 1
+						$value_for_old_vsn = $('.value_for_old_vsn')
+						value_for_new_vsn = 1
+						$value_for_new_vsn = $('.value_for_new_vsn')
+
 						$('.diff-mod').toggle()
 						$('.btn-diff-vsn').toggleClass("grey")
+
+						$('.btn-old-vsn').click(function() {
+							$(".old-aliases-for-module").toggle()
+							$(this).toggleClass("grey")
+							$(".module-button-group.old_vsn").each(function() {
+							    module_group_id = $(this).attr("id");
+							    module_name = module_group_id.substring(20)
+								$module_name = $('.module_name')
+								if ($(".module-button-group").hasClass("new_vsn") && $value_for_new_vsn == 0) {
+									$(".module-button.$module_name").toggleClass("btn-lg")
+									$(".device-bucket.$module_name").toggle()
+								}
+								if (value_for_old_vsn == 1) {
+									value_for_old_vsn = 0
+								} else {
+									value_for_old_vsn = 1
+								}
+							})
+						})
+						$('.btn-new-vsn').click(function() {
+							$(".new-aliases-for-module").toggle()
+							$(this).toggleClass("grey")
+							$(".module-button-group.new_vsn").each(function() {
+							    module_group_id = $(this).attr("id");
+							    module_name = module_group_id.substring(20)
+								$module_name = $('.module_name')
+								if ($(".module-button-group").hasClass("new_vsn") && $value_for_old_vsn == 0) {
+									$(".module-button.$module_name").toggleClass("btn-lg")
+									$(".device-bucket.$module_name").toggle()
+								}
+								if (value_for_new_vsn == 1) {
+									value_for_new_vsn = 0
+								} else {
+									value_for_new_vsn = 1
+								}
+							})
+						})
 						$('.btn-diff-vsn').click(function() {
 							$('.diff-mod').toggle()
 							$(this).toggleClass("grey")
 						})
-
-						$('.btn-old-vsn').click(function() {
-							$('.old-vsn').toggle()
-							$(this).toggleClass("grey")
-						})
-
 						$('.btn-old-mod').click(function() {
 							$('.old-mod').toggle()
 							$(this).toggleClass("grey")
 						})
-
-						$('.btn-new-vsn').click(function() {
-							$('.new-vsn').toggle()
-							$(this).toggleClass("grey")
-						})
-
 						$('.btn-new-mod').click(function() {
 							$('.new-mod').toggle()
 							$(this).toggleClass("grey")

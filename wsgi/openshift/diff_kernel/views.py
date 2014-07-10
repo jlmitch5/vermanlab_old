@@ -34,12 +34,12 @@ def diff(request):
 
             diff_data = requests.get(diff_url, params=request.GET)
 
-            #mods are all the modules from the kernel diff
+            # #mods are all the modules from the kernel diff
             kernel_diff_info = json.loads(diff_data.text)
     else:
         form = KernelDiffForm(kv_list = kvs)
 
     return render(request, 'diff_kernel/diff.html', { 
     	'form': form,
-        'kernel_diff_info': kernel_diff_info
+        'kdi': kernel_diff_info
     })
