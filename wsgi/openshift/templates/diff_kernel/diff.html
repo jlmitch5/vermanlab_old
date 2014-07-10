@@ -86,7 +86,7 @@
 							<div class="btn-group" style="width:50%; float: right;">
 
 
-								<button class="btn-{% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %} btn btn-default {% if mod.k2m.a or mod.k1m.a %}btn-lg {% if mod.k2m.a %}btn-danger{% endif %}{% endif %}" style="width: 100%; text-align: center;">{{ mod.k2m.m}} {{ mod.k2m.v }} {{ mod.k2m.srcv }}</button>		
+								<button class="module-button {% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %} btn btn-default {% if mod.k2m.a or mod.k1m.a %}btn-lg {% if mod.k2m.a %}btn-danger{% endif %}{% endif %}" style="width: 100%; text-align: center;">{{ mod.k2m.m}} {{ mod.k2m.v }} {{ mod.k2m.srcv }}</button>		
 
 
 							</div>
@@ -106,7 +106,7 @@
 					{% endif %}
 
 					{% if mod.k1m.a %}
-						<div class="old-aliases-for-module {{ mod.k1m.m }} aliases-{{ mod.k1m.m }}{{ mod.k1m.v }}{{ mod.k1m.srcv }}" style="width:calc(50% - 7px); margin-left: 0px; padding-left: 0px; float: left;">
+						<div class="aliases old {{ mod.k1m.m }} aliases-{{ mod.k1m.m }}{{ mod.k1m.v }}{{ mod.k1m.srcv }}" style="width:calc(50% - 7px); margin-left: 0px; padding-left: 0px; float: left;">
 							<ul class="list-group{% if mod.k2m %} old-vsn{% else %} old-mod{% endif %}" style="width: calc(100% - 5px); margin-bottom: 10px; float: left; padding-left: 0px;">
 							{% for alias in mod.k1m.a %}
 								<li class="list-group-item list-group-item-danger" style="width: 100%; margin-bottom: 0px;" class="alias {{ alias }}">{{ alias.a.r }}</li>
@@ -116,7 +116,7 @@
 					{% endif %}
 
 					{% if mod.k2m.a %}
-						<div class="new-aliases-for-module {{ mod.k2m.m }} aliases-{{ mod.k2m.m }}{{ mod.k2m.v }}{{ mod.k2m.srcv }}" style="width:calc(50% - 8px); float: right; margin-right: 10px;">
+						<div class="aliases new {{ mod.k2m.m }} aliases-{{ mod.k2m.m }}{{ mod.k2m.v }}{{ mod.k2m.srcv }}" style="width:calc(50% - 8px); float: right; margin-right: 10px;">
 							<ul class="list-group{% if mod.k1m %} new-vsn {% else %} new-mod{% endif %}" style="width: calc(100% - 5px); margin-bottom: 10px; float: left; padding-left: 0px;">
 							{% for alias in mod.k2m.a %}
 								<li class="list-group-item list-group-item-danger" style="margin-bottom: 0px;" class="alias {{ alias }}">{{ alias.a.r }}</li>
@@ -133,26 +133,31 @@
 				{% endfor %}
 
 				<script>
+					// TODO: value_for_old/new_vsn not setting from inner functions
 					$(document).ready(function() {
 
 						value_for_old_vsn = 1
-						$value_for_old_vsn = $('.value_for_old_vsn')
 						value_for_new_vsn = 1
-						$value_for_new_vsn = $('.value_for_new_vsn')
 
 						$('.diff-mod').toggle()
 						$('.btn-diff-vsn').toggleClass("grey")
 
 						$('.btn-old-vsn').click(function() {
-							$(".old-aliases-for-module").toggle()
+							console.log(value_for_new_vsn)
 							$(this).toggleClass("grey")
-							$(".module-button-group.old_vsn").each(function() {
+							$(".module-button-group.old-vsn").each(function() {
 							    module_group_id = $(this).attr("id");
 							    module_name = module_group_id.substring(20)
-								$module_name = $('.module_name')
-								if ($(".module-button-group").hasClass("new_vsn") && $value_for_new_vsn == 0) {
-									$(".module-button.$module_name").toggleClass("btn-lg")
-									$(".device-bucket.$module_name").toggle()
+								if (($(this).hasClass("new-vsn")) && (value_for_new_vsn == 0)) {
+									$(".aliases."+module_name).toggle()
+									$(".module-button."+module_name).toggleClass("btn-lg")
+									$(".device_bucket."+module_name).toggle()
+								} else if (! ($(this).hasClass("new-vsn")) ) {
+									$(".aliases."+module_name).toggle()
+									$(".module-button."+module_name).toggleClass("btn-lg")
+									$(".device_bucket."+module_name).toggle()
+								} else if ($(this).hasClass("new-vsn")) {
+									$(".aliases.old."+module_name).toggle()
 								}
 								if (value_for_old_vsn == 1) {
 									value_for_old_vsn = 0
@@ -162,20 +167,25 @@
 							})
 						})
 						$('.btn-new-vsn').click(function() {
-							$(".new-aliases-for-module").toggle()
 							$(this).toggleClass("grey")
-							$(".module-button-group.new_vsn").each(function() {
+							$(".module-button-group.new-vsn").each(function() {
 							    module_group_id = $(this).attr("id");
 							    module_name = module_group_id.substring(20)
-								$module_name = $('.module_name')
-								if ($(".module-button-group").hasClass("new_vsn") && $value_for_old_vsn == 0) {
-									$(".module-button.$module_name").toggleClass("btn-lg")
-									$(".device-bucket.$module_name").toggle()
+								if (($(this).hasClass("old-vsn")) && (value_for_old_vsn == 0)) {
+									$(".aliases."+module_name).toggle()
+									$(".module-button."+module_name).toggleClass("btn-lg")
+									$(".device_bucket."+module_name).toggle()
+								} else if (! ($(this).hasClass("old-vsn")) ) {
+									$(".aliases."+module_name).toggle()
+									$(".module-button."+module_name).toggleClass("btn-lg")
+									$(".device_bucket."+module_name).toggle()
+								} else if ($(this).hasClass("old-vsn")) {
+									$(".aliases.new."+module_name).toggle()
 								}
 								if (value_for_new_vsn == 1) {
 									value_for_new_vsn = 0
 								} else {
-									value_for_new_vsn = 1
+									value_for_old_vsn = 1
 								}
 							})
 						})
