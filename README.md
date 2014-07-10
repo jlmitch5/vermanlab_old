@@ -11,7 +11,7 @@ Current components:
  driver support.
     * allows further granularity to the device level (through aliases and readable device names)
 * [LCD_PCI] - allows you to see the oldest version of RHEL that will support your hardware setup
-* [PCI_IDs] - a RESTful interface for the pci.ids
+* [PCI_IDs] - a RESTful api for the [pci.ids] file used by `lspci`
 
 How to use:
 -----------
