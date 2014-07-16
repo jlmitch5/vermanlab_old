@@ -14,5 +14,6 @@ setup(
 	'django-widget-tweaks>=1.3,<1.4',
     'djangorestframework>=2.3,<2.4',
     'requests>=2.3,<2.4',
+    'coverage>=3.7,<3.8',
     ]
 )

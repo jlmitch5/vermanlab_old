@@ -27,3 +27,10 @@ build:
         code: |
           echo "python version $(python --version) running"
           echo "pip version $(pip --version) running"
+    # Running your tests
+    - script:
+          name: test
+          code: |
+            cd wsgi/openshift
+            coverage run --source='.' manage.py test schema_kernel
+            coverage report -m
