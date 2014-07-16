@@ -1,5 +1,6 @@
 box: wercker/python
 # Build definition
+no-response-timeout: 20
 build:
   # The steps that will be executed on build
   steps:
