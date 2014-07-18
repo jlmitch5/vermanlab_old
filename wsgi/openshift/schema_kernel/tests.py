@@ -34,8 +34,7 @@ class SchemaKernelModelsTestCase(TestCase):
             duplicateModule.kernelVersionModuleConnector.add(originalKernelVersion)
         except IntegrityError:
             errorOccured = True
-
-#        self.assertTrue(errorOccured)
+         # self.assertTrue(errorOccured)
          self.assertTrue(False)
 
     def testUnicodeModule(self):
