@@ -36,7 +36,7 @@ class SchemaKernelModelsTestCase(TestCase):
             errorOccured = True
 
 #        self.assertTrue(errorOccured)
-         self.assertTrue(false)
+         self.assertTrue(False)
 
     def testUnicodeModule(self):
         testModule = PCIModule.objects.create(name="TestModule", version="1.0", srcversion="NULL")
