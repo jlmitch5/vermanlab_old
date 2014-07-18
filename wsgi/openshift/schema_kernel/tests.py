@@ -34,8 +34,8 @@ class SchemaKernelModelsTestCase(TestCase):
             duplicateModule.kernelVersionModuleConnector.add(originalKernelVersion)
         except IntegrityError:
             errorOccured = True
-         # self.assertTrue(errorOccured)
-         self.assertTrue(False)
+        # self.assertTrue(errorOccured)
+        self.assertTrue(False)
 
     def testUnicodeModule(self):
         testModule = PCIModule.objects.create(name="TestModule", version="1.0", srcversion="NULL")
