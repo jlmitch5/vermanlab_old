@@ -99,44 +99,35 @@
 					<div class="row_spacer" style="width: 100%; display: relative; float: right;">
 					</div>
 
-					{% if mod.k1m.a or mod.k2m.a %}
-						<ul class="{% if mod.k2m.a and not mod.k1m %}new-mod {% endif %}{% if mod.k1m.a and not mod.k2m %}old-mod {% endif %}device_bucket {% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %}" style="width: calc(100% - 15px); margin-bottom: 10px; float: left; padding-left: 0px;">
-								<li class="inner-device-bucket {% if mod.k1m %}{{ mod.k1m.m }}{% else %}{{ mod.k2m.m }}{% endif %} list-group-item list-group-item-success" style="margin-bottom: 0px;" >Hover over the aliases to get the readable device name</li>
-						</ul>
-					{% endif %}
-
 					{% if mod.k1m.a %}
-						<div class="aliases old {{ mod.k1m.m }} aliases-{{ mod.k1m.m }}{{ mod.k1m.v }}{{ mod.k1m.srcv }}" style="width:calc(50% - 7px); margin-left: 0px; padding-left: 0px; float: left;">
-							<ul class="list-group{% if mod.k2m %} old-vsn{% else %} old-mod{% endif %}" style="width: calc(100% - 5px); margin-bottom: 10px; float: left; padding-left: 0px;">
-							{% for alias in mod.k1m.a %}
-								<li class="raw-alias-list-item list-group-item list-group-item-danger" style="width: 100%; margin-bottom: 0px;" class="alias {{ alias }}">{{ alias.a.r }}</li>
-							{% endfor %}
-							</ul>
+						<div class="aliases old {{ mod.k1m.m }} aliases-{{ mod.k1m.m }}{{ mod.k1m.v }}{{ mod.k1m.srcv }}" style="width:calc(50% - 10px); margin-left: 0px; padding-left: 0px; float: left;">
+							<div id="{{ mod.k2m.m }}{{ alias.a.r }}" class="raw-alias-list-item list-group-item list-group-item-danger" style="margin-bottom: 10px; border-top: 1px solid #ccc;" >
+								{% for alias in mod.k1m.a %}
+									<div class="list-group-item-heading">
+										<p>{{ alias.a.r }}</p>
+									</div>
+									<div class="list-group-item-text" style="margin-bottom: 0px;">
+										<p style="margin-bottom: 0px;">{{ alias.a.p }}</p>
+									</div>
+								{% endfor %}
+							</div>
 						</div>
 					{% endif %}
 
 					{% if mod.k2m.a %}
 						<div class="aliases new {{ mod.k2m.m }} aliases-{{ mod.k2m.m }}{{ mod.k2m.v }}{{ mod.k2m.srcv }}" style="width:calc(50% - 8px); float: right; margin-right: 10px;">
-							<ul class="list-group{% if mod.k1m %} new-vsn {% else %} new-mod{% endif %}" style="width: calc(100% - 5px); margin-bottom: 10px; float: left; padding-left: 0px;">
+							<div class="list-group {% if mod.k1m %} new-vsn {% else %} new-mod{% endif %}" style="width: calc(100% - 5px); margin-bottom: 10px; float: left; padding-left: 0px; display:block;">
 							{% for alias in mod.k2m.a %}
-								<li id="{{ mod.k2m.m }}{{ alias.a.r }}" class="raw-alias-list-item list-group-item list-group-item-danger" style="margin-bottom: 0px;" class="alias {{ alias }}">{{ alias.a.r }}</li>
-								<script>
-									$(document).ready(function() {
-										var alias_id = "#{{ mod.k2m.m }}"+"{{ alias.a.r }}".replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1')
-										var device_bucket_id = "li.inner-device-bucket.{{ mod.k2m.m }}"
-										console.log(device_bucket_id)
-										$(alias_id).hover(function() {
-											console.log("{{ alias.a.p }}")
-											$(device_bucket_id).text("{{ alias.a.p }}")
-										})
-									})
-									// $("#{{ mod.k2m.m }}{{ alias.a.r }}").hover(function() {
-									// 	console.log("{{ alias.a.p }}")
-									// 	$("li.inner-device-bucket.{{ alias.a.r }}").text("{{ alias.a.p }}")
-									// })
-								</script>
+								<div id="{{ mod.k2m.m }}{{ alias.a.r }}" class="raw-alias-list-item list-group-item list-group-item-danger" style="margin-bottom: 0px; border-top: 1px solid #ccc;" >
+									<div class="list-group-item-heading">
+										<p><span style="font-weight: bold;">Alias: </span>{{ alias.a.r }}</p>
+									</div>
+									<div class="list-group-item-text" style="margin-bottom: 0px;">
+										<p style="margin-bottom: 0px;"><span style="font-weight: bold;">Device name: </span>{{ alias.a.p }}</p>
+									</div>
+								</div>
 							{% endfor %}
-							</ul>
+							</div>
 						</div>
 					{% endif %}
 
