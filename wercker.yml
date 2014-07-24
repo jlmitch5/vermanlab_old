@@ -36,8 +36,6 @@ build:
             coverage run --source='.' manage.py test schema_kernel
             coverage report -m
 
-deploy:
-  steps:
     - simonmenke/git-merge:
         source: development
         target: master
