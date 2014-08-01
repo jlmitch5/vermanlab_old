@@ -85,6 +85,7 @@ INSTALLED_APPS = (
     'schema_kernel',
     'diff_kernel',
     'pci_ids',
+    'south',
 )
 
 TEMPLATE_DIRS = (

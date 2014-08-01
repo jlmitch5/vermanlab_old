@@ -6,7 +6,7 @@ from django.db import IntegrityError
 # Kernel Version is the version of the kernel that contains specific modules
 class KernelVersion(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    pretty_kernel_version_name = models.CharField(max_length=100, default="kernel version")
+    # pretty_kernel_version_name = models.CharField(max_length=100, default="kernel version")
 
     # returns the KernelVersion name
     def __unicode__(self):

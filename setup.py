@@ -10,7 +10,8 @@ setup(
     author_email='jmitchel@example.com',
     url='http://www.python.org/sigs/distutils-sig/',
     install_requires=[
-	'Django>=1.7c2,<1.8',
+    'South>=1.0.0,<1.1',
+	'Django>=1.6.5,<1.7',
 	'django-widget-tweaks>=1.3,<1.4',
     'djangorestframework>=2.3,<2.4',
     'requests>=2.3,<2.4',
