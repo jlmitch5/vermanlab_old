@@ -1,5 +1,6 @@
-Verman Lab
+Verman Lab Old
 ===================
+Note, this is an old version of vermanlab.  I am making it public for anyone who may be interested in seeing the design process of this app (the revactored version is the reald deal!).  Find it at [jlmitch5/vermanlab](https://github.com/jlmitch5/vermanlab)
 
 ** Verman Lab is a way to visualize the Linux Kernel in order to easily manage a system's PCI Modules. **
 
