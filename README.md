@@ -1,6 +1,6 @@
 Verman Lab Old
 ===================
-Note, this is an old version of vermanlab.  I am making it public for anyone who may be interested in seeing the design process of this app (the revactored version is the reald deal!).  Find it at [jlmitch5/vermanlab](https://github.com/jlmitch5/vermanlab)
+Note, this is an old version of vermanlab.  I am making it public for anyone who may be interested in seeing the design process of this app (the refactored version is the real deal!).  Find it at [jlmitch5/vermanlab](https://github.com/jlmitch5/vermanlab)
 
 ** Verman Lab is a way to visualize the Linux Kernel in order to easily manage a system's PCI Modules. **
 
@@ -46,7 +46,4 @@ cd wsgi/openshift
 # start the server and visit localhost:8000 (or other port, just change it below)
 python manage.py runserver 8000
 ```
-will be displayed, so be sure to save it somewhere. You might want 
-to pipe the output of the git push to a text file so you can grep for
-the password later.
 
